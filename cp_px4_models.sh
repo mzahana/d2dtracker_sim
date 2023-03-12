@@ -9,11 +9,19 @@ fi
 # Find the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+echo "Script directory = ${SCRIPT_DIR}"
+
+sleep 2
+
 # Copy files to $PX4_DIR
+echo  && echo "Cleanup ${PX4_DIR} ... "
+sleep 1
 cd ${PX4_DIR} && make clean && make distclean && git checkout main && make submodulesclean
 
-cp ${SCRIPT_DIR}/models/* ${PX4_DIR}/Tools/simulations/gz/models/
-cp ${SCRIPT_DIR}/config/px4/* ${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/
+echo && echo  "Copying files to ${PX4_DIR}" && echo
+sleep 1
+cp -r ${SCRIPT_DIR}/models/* ${PX4_DIR}/Tools/simulation/gz/models/
+cp -r ${SCRIPT_DIR}/config/px4/* ${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/
 
-echo "Models and airframe config files are copied to the respective folder in the ${PX4_DIR} directory"
+echo "DONE. Models and airframe config files are copied to the respective folder in the ${PX4_DIR} directory"
 cd
