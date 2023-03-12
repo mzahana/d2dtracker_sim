@@ -82,4 +82,4 @@ cd $ROS2_WS && colcon build
 
 echo "DONE. Pkgs are built. Models and airframe config files are copied to the respective folder in the ${PX4_DIR} directory"
 echo "Source the ros2_ws and ruse os2 launch d2dtracker_sim run_sim.launch.py to run the simulation"
-cd
+cd $HOME
