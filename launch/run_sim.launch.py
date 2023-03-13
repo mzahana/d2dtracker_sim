@@ -1,53 +1,34 @@
 #!/usr/bin/env python3
 
+"""
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+THIS SCRIPT DOES NOT WORK AS EXPECTED. DO NOT USE IT!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"""
 import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python import get_package_share_directory
 
 def generate_launch_description():
     ld = LaunchDescription()
 
-    # Node for Drone 0
-    d_1_model_name = {'gz_model_name': 'x500_d435'}
-    d_1_autostart_id = {'px4_autostart_id': 4006}
-    d_1_instance_id = {'instance_id': 0}
-    d_1_xpos = {'xpos': 0.}
-    d_1_ypos = {'ypos': 0.}
-    d_1_zpos = {'zpos': 1.0}
-    headless= {'headless' : 0}
+    # Get the path to the package containing the launch files
+    my_package_dir = get_package_share_directory('d2dtracker_sim')
     
-    # Start the Python node that runs the shell command
-    node1_cmd = Node(
-        package='d2dtracker_sim',
-        executable='gz_sim',
-        output='screen',
-        name='px4_uav0',
-        parameters=[headless, d_1_model_name, d_1_autostart_id, d_1_instance_id, d_1_xpos, d_1_ypos, d_1_zpos]
-    )
+    # Define the paths to the other launch files
+    target_launch_file = os.path.join(my_package_dir, 'target.launch.py')
+    interceptor_launch_file = os.path.join(my_package_dir, 'interceptor.launch.py')
 
-    # Node for Drone 0
-    # d_1_model_name = {'gz_model_name': 'x500_d435'}
-    # d_1_autostart_id = {'px4_autostart_id': 4006}
-    # d_1_instance_id = {'instance_id': 1}
-    # d_1_xpos = {'xpos': 5.}
-    # d_1_ypos = {'ypos': 0.}
-    # d_1_zpos = {'zpos': 1.0}
-    # headless= {'headless' : 1}
-    
-    # # Start the Python node that runs the shell command
-    # node2_cmd = Node(
-    #     package='d2dtracker_sim',
-    #     executable='gz_sim',
-    #     output='screen',
-    #     name='px4_uav1',
-    #     parameters=[headless, d_1_model_name, d_1_autostart_id, d_1_instance_id, d_1_xpos, d_1_ypos, d_1_zpos]
-    # )
 
-    # Run the ros_gz_bridge
+    interceptor_launch = IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(interceptor_launch_file))
+    ld.add_action(interceptor_launch)
 
-    # Run some TF pkg
-
-    ld.add_action(node1_cmd)
-    # ld.add_action(node2_cmd)
+    # target_launch = IncludeLaunchDescription(
+    #                 PythonLaunchDescriptionSource(target_launch_file))
+    # ld.add_action(target_launch)
 
     return ld
