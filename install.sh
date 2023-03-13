@@ -63,6 +63,9 @@ sleep 1
 cp -r ${ROS2_SRC}/d2dtracker_sim/models/* ${PX4_DIR}/Tools/simulation/gz/models/
 cp -r ${ROS2_SRC}/d2dtracker_sim//config/px4/* ${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/
 
+# Build px4_sitl
+cd $PX4_DIR && make px4_sitl
+
 # Clone some PX4 rose-related packages
 if [ ! -d "$ROS2_SRC/px4_msgs" ]; then
     cd $ROS2_SRC
@@ -81,5 +84,5 @@ fi
 cd $ROS2_WS && colcon build
 
 echo "DONE. Pkgs are built. Models and airframe config files are copied to the respective folder in the ${PX4_DIR} directory"
-echo "Source the ros2_ws and ruse os2 launch d2dtracker_sim run_sim.launch.py to run the simulation"
+echo "Source the ros2_ws and use <ros2 launch d2dtracker_sim run_sim.launch.py> to run the simulation"
 cd $HOME
