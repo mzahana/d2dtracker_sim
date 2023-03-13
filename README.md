@@ -18,7 +18,29 @@ ROS 2 simulation packge of the D2DTracker system
     * Source the workspace `source install setup.bash`
 
 # Run
-To run the Gazebo simulation execute the following command after you build and source the workspace as mentioned above.
-```bash
-ros2 launch d2dtracker_sim run_sim.launch.py
-```
+
+* Combile the workspace using `colcon build`
+
+* Source the workspace `source install/setup.bash`
+
+* In the 1st terminal, run the interceptor simulation
+    ```bash
+    ros2 launch d2dtracker_sim interceptor.launch.py
+    ```
+    You should see one quadcopter in Gazebo
+
+* In 2nd terminal, run the target simulation
+    ```bash
+    ros2 launch d2dtracker_sim target.launch.py
+    ```
+    You should see a second quadcopter spawned in Gazebo
+
+* In 3rd terminal run the DDS agent to receive ros topics
+    ```bash
+    MicroXRCEAgent udp4 -p 8888
+    ```
+
+* In 4th terminal, check the available ros topics
+    ```bash
+    ros2 topic list
+    ```
