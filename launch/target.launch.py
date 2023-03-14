@@ -25,8 +25,28 @@ def generate_launch_description():
         parameters=[headless, model_name, autostart_id, instance_id, xpos, ypos, zpos]
     )
 
-    # Run some TF pkg to map from map -> local_pose_ENU
+    # TF odom NED -> ENU
+    enu_frame= {'parent_frame' : 'local_pose_ENU'}
+    child_frame= {'child_frame' : 'base_link'}
+    tf_node = Node(
+        package='d2dtracker_sim',
+        executable='tf_node',
+        output='screen',
+        name='target_tf_node',
+        namespace='px4_'+str(instance_id['instance_id']),
+        parameters=[enu_frame, child_frame]
+    )
+
+    # Static TF map -> local_pose_ENU
+    map2pose_tf_node = Node(
+        package='tf2_ros',
+        name='map2px4_'+str(instance_id['instance_id'])+'_tf_node',
+        executable='static_transform_publisher',
+        arguments=[str(xpos['xpos']), str(ypos['ypos']), str(ypos['ypos']), '0', '0', '0', 'world', 'px4_'+str(instance_id['instance_id'])+'/'+enu_frame['parent_frame']],
+    )
 
     ld.add_action(node_cmd)
+    ld.add_action(tf_node)
+    ld.add_action(map2pose_tf_node)
 
     return ld
