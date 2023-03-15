@@ -3,6 +3,7 @@
 import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from ament_index_python import get_package_share_directory
 
 def generate_launch_description():
     ld = LaunchDescription()
@@ -13,7 +14,7 @@ def generate_launch_description():
     instance_id = {'instance_id': 1}
     xpos = {'xpos': 2.}
     ypos = {'ypos': 0.}
-    zpos = {'zpos': 1.0}
+    zpos = {'zpos': 0.5}
     headless= {'headless' : 0}
     
     # Start the Python node that runs the shell command
@@ -46,7 +47,7 @@ def generate_launch_description():
         package='tf2_ros',
         name='map2px4_'+str(instance_id['instance_id'])+'_tf_node',
         executable='static_transform_publisher',
-        arguments=[str(xpos['xpos']), str(ypos['ypos']), str(ypos['ypos']), '0', '0', '0', 'world', 'px4_'+str(instance_id['instance_id'])+'/'+enu_frame['parent_frame']],
+        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', 'world', 'px4_'+str(instance_id['instance_id'])+'/'+enu_frame['parent_frame']],
     )
 
     # Static TF base_link -> depth_camera
@@ -64,9 +65,43 @@ def generate_launch_description():
         arguments=[str(cam_x), str(cam_y), str(cam_z), str(cam_yaw), str(cam_pitch), str(cam_roll), 'px4_'+str(instance_id['instance_id'])+'/'+base_link['child_frame'], 'px4_'+str(instance_id['instance_id'])+'/depth_camera'],
     )
 
+    # Transport rgb and depth images from GZ topics to ROS topics    
+    ros_gz_bridge = Node(
+        package='ros_gz_bridge',
+        name='ros_bridge_node_depthcam',
+        executable='parameter_bridge',
+        arguments=['/d435/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
+                   '/d435/image@sensor_msgs/msg/Image[ignition.msgs.Image',
+                   '--ros-args', '-r', '/d435/depth_image:='+'/px4_'+str(instance_id['instance_id'])+'/depth_image',
+                   '-r', '/d435/image:='+'/px4_'+str(instance_id['instance_id'])+'/image'
+                   ],
+    )
+
+    # Midro DDS agent
+    port={'port':8888}
+    dds_agent_node = Node(
+        package='d2dtracker_sim',
+        executable='microdds',
+        output='screen',
+        name='microdds_node',
+        parameters=[port]
+    )
+
+    # Rviz2
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        output='screen',
+        name='sim_rviz2',
+        arguments=['-d' + os.path.join(get_package_share_directory('d2dtracker_sim'), 'sim.rviz')]
+    )
+
     ld.add_action(node_cmd)
     ld.add_action(tf_node)
     ld.add_action(map2pose_tf_node)
     ld.add_action(cam_tf_node)
+    ld.add_action(ros_gz_bridge)
+    ld.add_action(dds_agent_node)
+    ld.add_action(rviz_node)
 
     return ld
