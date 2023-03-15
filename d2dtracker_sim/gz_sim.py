@@ -30,6 +30,9 @@ class PX4GZSIM(rclpy.node.Node):
         self.declare_parameter('ypos', 0.0)
         self.declare_parameter('zpos', 0.0)
 
+        self._ns = self.get_namespace()
+        self._ns = self._ns.replace("/", "")
+
         self.run()
 
 
@@ -56,7 +59,7 @@ class PX4GZSIM(rclpy.node.Node):
         self.get_logger().info('zpos %s!' % zpos)
 
         cmd1_str="cd {} && ".format(self.PX4_DIR)
-        cmd2_str="PX4_SYS_AUTOSTART={} PX4_GZ_MODEL={} PX4_GZ_MODEL_POSE='{},{},{}' ./build/px4_sitl_default/bin/px4 -i {}".format(px4_autostart_id, gz_model_name, xpos,ypos,zpos, instance_id)
+        cmd2_str="PX4_SYS_AUTOSTART={} PX4_GZ_MODEL={} PX4_MICRODDS_NS={} PX4_GZ_MODEL_POSE='{},{},{}' ./build/px4_sitl_default/bin/px4 -i {}".format(px4_autostart_id, gz_model_name, self._ns, xpos,ypos,zpos, instance_id)
         cmd_str = cmd1_str+cmd2_str
         os.system(cmd_str)
 

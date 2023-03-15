@@ -52,15 +52,15 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        px4_1/base_link:
+        interceptor/base_link:
           Value: true
-        px4_1/depth_camera:
+        interceptor/depth_camera:
           Value: true
-        px4_1/local_pose_ENU:
+        interceptor/local_pose_ENU:
           Value: true
-        px4_2/base_link:
+        target/base_link:
           Value: true
-        px4_2/local_pose_ENU:
+        target/local_pose_ENU:
           Value: true
         world:
           Value: true
@@ -71,12 +71,12 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          px4_1/local_pose_ENU:
-            px4_1/base_link:
-              px4_1/depth_camera:
+          interceptor/local_pose_ENU:
+            interceptor/base_link:
+              interceptor/depth_camera:
                 {}
-          px4_2/local_pose_ENU:
-            px4_2/base_link:
+          target/local_pose_ENU:
+            target/base_link:
               {}
       Update Interval: 0
       Value: true
@@ -92,7 +92,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /px4_1/image
+        Value: /interceptor/image
       Value: true
     - Class: rviz_default_plugins/Image
       Enabled: true
@@ -106,7 +106,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /px4_1/depth_image
+        Value: /interceptor/depth_image
       Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz_default_plugins/Odometry
@@ -145,7 +145,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /px4_1/odometry
+        Value: /interceptor/odometry
       Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz_default_plugins/Odometry
@@ -184,7 +184,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /px4_2/odometry
+        Value: /target/odometry
       Value: true
   Enabled: true
   Global Options:

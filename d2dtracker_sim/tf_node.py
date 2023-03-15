@@ -6,6 +6,32 @@ from px4_msgs.msg import VehicleOdometry
 from geometry_msgs.msg import TransformStamped, Quaternion
 from nav_msgs.msg import Odometry
 from math import sqrt
+import numpy as np
+
+def quaternion_multiply(q1, q2):
+    # q=[w,x,y,z]
+    return (
+        q1[0]*q2[0] - q1[1]*q2[1] - q1[2]*q2[2] - q1[3]*q2[3],
+        q1[0]*q2[1] + q1[1]*q2[0] + q1[2]*q2[3] - q1[3]*q2[2],
+        q1[0]*q2[2] - q1[1]*q2[3] + q1[2]*q2[0] + q1[3]*q2[1],
+        q1[0]*q2[3] + q1[1]*q2[2] - q1[2]*q2[1] + q1[3]*q2[0])
+
+def ned2enu(q_ned):
+    """
+    Converts a quaternion expressed in NED frame to a quaternion expressed in ENU frame
+
+    :param q_ned: quaternion expressed in NED frame as a numpy array of shape (4,). q=[w,x,y,z]
+    :return: quaternion expressed in ENU frame as a numpy array of shape (4,)
+    """
+
+    R_ned2enu = np.array([[0, 1, 0, 0],
+                          [1, 0, 0, 0],
+                          [0, 0, -1, 0],
+                          [0, 0, 0, -1]])
+
+    q_enu = np.dot(R_ned2enu, q_ned)
+
+    return q_enu
 
 class PX4TF(Node):
     def __init__(self):
@@ -52,10 +78,20 @@ class PX4TF(Node):
         # q1 = Quaternion(w = 0.0, x = sqrt(2)/2, y = sqrt(2)/2, z = 0.0)
         # q2 = Quaternion(w = float(msg.q[0]), x = float(msg.q[1]), y = float(msg.q[2]), z = float(msg.q[3]))
         # q = tf2_ros.transformations.quaternion_multiply(q1, q2)
-        self._odom_msg.pose.pose.orientation.w = float(msg.q[0])
-        self._odom_msg.pose.pose.orientation.x = float(msg.q[2])
-        self._odom_msg.pose.pose.orientation.y = float(msg.q[1])
-        self._odom_msg.pose.pose.orientation.z = float(-msg.q[3])
+
+        # q_ned=(msg.q[0],
+        #        msg.q[1],
+        #        msg.q[2],
+        #        msg.q[3])
+        # q_rot=(0.0, sqrt(2.)/2., sqrt(2.)/2., -1.0)
+        # q_enu = quaternion_multiply(q_rot, q_ned)
+
+        q_ned=np.array([msg.q[0], msg.q[1], msg.q[2], msg.q[3]])
+        q_enu = ned2enu(q_ned)
+        self._odom_msg.pose.pose.orientation.w = q_enu[0] #float(msg.q[0])
+        self._odom_msg.pose.pose.orientation.x = q_enu[1] #float(msg.q[2])
+        self._odom_msg.pose.pose.orientation.y = q_enu[2] #float(msg.q[1])
+        self._odom_msg.pose.pose.orientation.z = q_enu[3] #float(-msg.q[3])
 
         # self._odom_msg.pose.pose.orientation.w = q.w
         # self._odom_msg.pose.pose.orientation.x = q.x
@@ -76,6 +112,7 @@ class PX4TF(Node):
         transform.transform.translation.y =  self._odom_msg.pose.pose.position.y
         transform.transform.translation.z =  self._odom_msg.pose.pose.position.z
 
+        
         transform.transform.rotation.w = self._odom_msg.pose.pose.orientation.w
         transform.transform.rotation.x = self._odom_msg.pose.pose.orientation.x
         transform.transform.rotation.y = self._odom_msg.pose.pose.orientation.y
