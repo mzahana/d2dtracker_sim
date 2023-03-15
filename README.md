@@ -35,12 +35,16 @@ ROS 2 simulation packge of the D2DTracker system
     ```
     You should see a second quadcopter spawned in Gazebo
 
-* In 3rd terminal run the DDS agent to receive ros topics
+* In 3rd terminal run the DDS agent node to receive ros topics
     ```bash
-    MicroXRCEAgent udp4 -p 8888
+    ros2 run d2dtracker_sim microdds
     ```
 
 * In 4th terminal, check the available ros topics
     ```bash
     ros2 topic list
+    ```
+* In a new terminal, you can check the `tf` tree using
+    ```bash
+    ros2 run rqt_tf_tree rqt_tf_tree
     ```
