@@ -14,9 +14,9 @@ echo "Script directory = ${SCRIPT_DIR}"
 sleep 2
 
 # Copy files to $PX4_DIR
-echo  && echo "Cleanup ${PX4_DIR} ... "
-sleep 1
-cd ${PX4_DIR} && make clean && make distclean && git checkout main && make submodulesclean
+# echo  && echo "Cleanup ${PX4_DIR} ... "
+# sleep 1
+# cd ${PX4_DIR} && make clean && make distclean && git checkout main && make submodulesclean
 
 echo && echo  "Copying files to ${PX4_DIR}" && echo
 sleep 1
