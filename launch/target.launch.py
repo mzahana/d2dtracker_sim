@@ -8,12 +8,12 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # Node for Drone 0
-    model_name = {'gz_model_name': 'x500_d435'}
-    autostart_id = {'px4_autostart_id': 4006}
+    model_name = {'gz_model_name': 'x500'}
+    autostart_id = {'px4_autostart_id': 4001}
     instance_id = {'instance_id': 2}
     xpos = {'xpos': 0.}
     ypos = {'ypos': 5.}
-    zpos = {'zpos': 1.0}
+    zpos = {'zpos': 0.5}
     headless= {'headless' : 0}
     
     # Start the Python node that runs the shell command
@@ -42,7 +42,7 @@ def generate_launch_description():
         package='tf2_ros',
         name='map2px4_'+str(instance_id['instance_id'])+'_tf_node',
         executable='static_transform_publisher',
-        arguments=[str(xpos['xpos']), str(ypos['ypos']), str(ypos['ypos']), '0', '0', '0', 'world', 'px4_'+str(instance_id['instance_id'])+'/'+enu_frame['parent_frame']],
+        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', 'world', 'px4_'+str(instance_id['instance_id'])+'/'+enu_frame['parent_frame']],
     )
 
     ld.add_action(node_cmd)
