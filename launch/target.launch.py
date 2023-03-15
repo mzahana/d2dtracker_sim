@@ -11,8 +11,8 @@ def generate_launch_description():
     model_name = {'gz_model_name': 'x3_uav'}
     autostart_id = {'px4_autostart_id': 4007}
     instance_id = {'instance_id': 2}
-    xpos = {'xpos': 0.}
-    ypos = {'ypos': 5.}
+    xpos = {'xpos': 0.0}
+    ypos = {'ypos': 5.0}
     zpos = {'zpos': 0.5}
     headless= {'headless' : 0}
     
