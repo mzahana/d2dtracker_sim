@@ -70,9 +70,9 @@ class PX4TF(Node):
         self._odom_msg.child_frame_id = self._ns+'/'+self._child_frame
 
         # Set position
-        self._odom_msg.pose.pose.position.x = float(msg.position[1])
-        self._odom_msg.pose.pose.position.y = float(msg.position[0])
-        self._odom_msg.pose.pose.position.z = float(-msg.position[2])
+        self._odom_msg.pose.pose.position.x = float(msg.position[0])
+        self._odom_msg.pose.pose.position.y = -float(msg.position[1])
+        self._odom_msg.pose.pose.position.z = -float(msg.position[2])
 
         # Set orientation
         # q1 = Quaternion(w = 0.0, x = sqrt(2)/2, y = sqrt(2)/2, z = 0.0)
@@ -86,12 +86,13 @@ class PX4TF(Node):
         # q_rot=(0.0, sqrt(2.)/2., sqrt(2.)/2., -1.0)
         # q_enu = quaternion_multiply(q_rot, q_ned)
 
-        q_ned=np.array([msg.q[0], msg.q[1], msg.q[2], msg.q[3]])
-        q_enu = ned2enu(q_ned)
-        self._odom_msg.pose.pose.orientation.w = q_enu[0] #float(msg.q[0])
-        self._odom_msg.pose.pose.orientation.x = q_enu[1] #float(msg.q[2])
-        self._odom_msg.pose.pose.orientation.y = q_enu[2] #float(msg.q[1])
-        self._odom_msg.pose.pose.orientation.z = q_enu[3] #float(-msg.q[3])
+        # q_ned=np.array([msg.q[0], msg.q[1], msg.q[2], msg.q[3]])
+        # q_enu = ned2enu(q_ned)
+
+        self._odom_msg.pose.pose.orientation.w = float(msg.q[0])
+        self._odom_msg.pose.pose.orientation.x = float(msg.q[1])
+        self._odom_msg.pose.pose.orientation.y = -float(msg.q[2])
+        self._odom_msg.pose.pose.orientation.z = -float(msg.q[3])
 
         # self._odom_msg.pose.pose.orientation.w = q.w
         # self._odom_msg.pose.pose.orientation.x = q.x
