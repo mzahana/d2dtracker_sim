@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+"""
+This script runs a PX4 SITL instance and spawns it in gazebo garden
+using the command: 
+    ARGS ./build/px4_sitl_default/bin/px4 -i <instance_id>
+Reference: https://docs.px4.io/main/en/sim_gazebo_gz/#usage-configuration-options
+"""
 import os
 import rclpy
 import rclpy.node
