@@ -2,20 +2,11 @@
 ROS 2 simulation packge of the D2DTracker system
 
 # Dependencies
-* ROS 2 humble
+* ROS 2 humble + Gazebo `garden`
 * PX4 Atuopilot
 
 # Installation
-* Follow the instrucitons in the [px4_ros2_humble](https://github.com/mzahana/px4_ros2_humble)
-* Inside the container 
-    * Export the `PX4_DIR`: `export PX4_DIR=path_to_PX4-Aitopilot_directory_inside_container`
-    * Run the `cp_px4_models.sh` script 
-        ```bash
-        cd d2dtracker_sim
-        ./cp_px4_models.sh
-        ```
-    * Build the workspace `colcon build`
-    * Source the workspace `source install setup.bash`
+The simulation deveopment environment is available in a self-contained docker image. First follow the instructions at [d2dtracker_sim_docker](https://github.com/mzahana/d2dtracker_sim_docker)
 
 # Run
 
