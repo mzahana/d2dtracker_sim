@@ -14,7 +14,7 @@ def generate_launch_description():
     model_name = {'gz_model_name': 'x500_d435'}
     autostart_id = {'px4_autostart_id': 4006}
     instance_id = {'instance_id': 1}
-    xpos = {'xpos': 2.}
+    xpos = {'xpos': 0.}
     ypos = {'ypos': 0.}
     zpos = {'zpos': 0.5}
     headless= {'headless' : 0}
