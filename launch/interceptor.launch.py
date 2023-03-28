@@ -71,8 +71,10 @@ def generate_launch_description():
         executable='parameter_bridge',
         arguments=['/d435/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
                    '/d435/image@sensor_msgs/msg/Image[ignition.msgs.Image',
+                   '/d435/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
                    '--ros-args', '-r', '/d435/depth_image:='+ns+'/depth_image',
-                   '-r', '/d435/image:='+ns+'/image'
+                   '-r', '/d435/image:='+ns+'/image',
+                   '-r', '/d435/points:='+ns+'/points'
                    ],
     )
 
