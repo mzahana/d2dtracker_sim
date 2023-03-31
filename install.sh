@@ -10,6 +10,7 @@ fi
 ROS2_WS=$DEV_DIR/ros2_ws
 ROS2_SRC=$DEV_DIR/ros2_ws/src
 PX4_DIR=$DEV_DIR/PX4-Autopilot
+OSQP_SRC=$DEV_DIR
 
 # # Make sure that PX4 root directory is set
 # if [ -z "${PX4_ROOT}" ]; then
@@ -80,6 +81,41 @@ if [ ! -d "$ROS2_SRC/px4_ros_com" ]; then
 else
     cd $ROS2_SRC/px4_ros_com && git pull origin main
 fi
+
+#
+# custom_trajectory_msgs
+#
+PKG_URL=''
+if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/custom_trajectory_msgs.git
+else
+    PKG_URL=https://github.com/mzahana/custom_trajectory_msgs.git
+fi
+
+if [ ! -d "$ROS2_SRC/custom_trajectory_msgs" ]; then
+    cd $ROS2_SRC
+    git clone ${PKG_URL}
+else
+    cd $ROS2_SRC/custom_trajectory_msgs && git pull origin ros2_humble
+fi
+
+#
+# trajectory_prediction
+#
+PKG_URL=''
+if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/trajectory_prediction.git
+else
+    PKG_URL=https://github.com/mzahana/trajectory_prediction.git
+fi
+
+if [ ! -d "$ROS2_SRC/trajectory_prediction" ]; then
+    cd $ROS2_SRC
+    git clone ${PKG_URL}
+else
+    cd $ROS2_SRC/trajectory_prediction && git pull origin ros2_humble
+fi
+cd $ROS2_SRC/trajectory_prediction && . setup.sh
 
 cd $ROS2_WS && colcon build
 
