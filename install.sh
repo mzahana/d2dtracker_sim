@@ -75,12 +75,12 @@ else
     cd $ROS2_SRC/px4_msgs && git pull origin main
 fi
 
-if [ ! -d "$ROS2_SRC/px4_ros_com" ]; then
-    cd $ROS2_SRC
-    git clone https://github.com/PX4/px4_ros_com.git
-else
-    cd $ROS2_SRC/px4_ros_com && git pull origin main
-fi
+# if [ ! -d "$ROS2_SRC/px4_ros_com" ]; then
+#     cd $ROS2_SRC
+#     git clone https://github.com/PX4/px4_ros_com.git
+# else
+#     cd $ROS2_SRC/px4_ros_com && git pull origin main
+# fi
 
 #
 # custom_trajectory_msgs
