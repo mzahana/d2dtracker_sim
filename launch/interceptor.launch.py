@@ -72,9 +72,11 @@ def generate_launch_description():
         arguments=['/d435/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
                    '/d435/image@sensor_msgs/msg/Image[ignition.msgs.Image',
                    '/d435/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
+                   '/d435/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
                    '--ros-args', '-r', '/d435/depth_image:='+ns+'/depth_image',
                    '-r', '/d435/image:='+ns+'/image',
-                   '-r', '/d435/points:='+ns+'/points'
+                   '-r', '/d435/points:='+ns+'/points',
+                   '-r', '/d435/camera_info:='+ns+'/camera_info'
                    ],
     )
 
