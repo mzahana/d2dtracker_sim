@@ -23,5 +23,8 @@ sleep 1
 cp -r ${SCRIPT_DIR}/models/* ${PX4_DIR}/Tools/simulation/gz/models/
 cp -r ${SCRIPT_DIR}/config/px4/* ${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/
 
+# Build px4_sitl
+cd $PX4_DIR && make px4_sitl
+
 echo "DONE. Models and airframe config files are copied to the respective folder in the ${PX4_DIR} directory"
 cd
