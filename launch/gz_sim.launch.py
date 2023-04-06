@@ -14,6 +14,12 @@ def generate_launch_description():
         print('PX4_DIR is not set')
         sys.exit(1)
 
+    namespace = LaunchConfiguration('namespace')
+    namespace_launch_arg = DeclareLaunchArgument(
+        'namespace',
+        default_value=''
+    )
+
     headless = LaunchConfiguration('headless')
     headless_launch_arg = DeclareLaunchArgument(
         'headless',
@@ -29,7 +35,7 @@ def generate_launch_description():
     px4_autostart_id = LaunchConfiguration('px4_autostart_id')
     px4_autostart_id_launch_arg = DeclareLaunchArgument(
         'px4_autostart_id',
-        default_value='x500'
+        default_value='4001'
     )
 
     instance_id = LaunchConfiguration('instance_id')
@@ -50,30 +56,45 @@ def generate_launch_description():
         default_value='0.0'
     )
 
-    namespace = LaunchConfiguration('namespace')
-    namespace_launch_arg = DeclareLaunchArgument(
-        'namespace',
-        default_value=''
-    )
-
     zpos = LaunchConfiguration('zpos')
     zpos_launch_arg = DeclareLaunchArgument(
         'zpos',
-        default_value='0.0'
+        default_value='0.2'
     )
+
+    shell_a = LaunchConfiguration('shell')
+    shell_launch_arg = DeclareLaunchArgument(
+        'shell',
+        default_value='True'
+    )
+
 
     cmd1_str="cd {} && ".format(PX4_DIR)
     cmd2_str="PX4_SYS_AUTOSTART={} PX4_GZ_MODEL={} PX4_MICRODDS_NS={} PX4_GZ_MODEL_POSE='{},{},{}' ./build/px4_sitl_default/bin/px4 -i {}".format(px4_autostart_id, gz_model_name, namespace, xpos,ypos,zpos, instance_id)
     cmd_str = cmd1_str+cmd2_str
     px4_sim_process = ExecuteProcess(
         cmd=[[
-            cmd_str
+            'cd ',PX4_DIR ,' && ',
+            'PX4_SYS_AUTOSTART=', px4_autostart_id,
+            ' PX4_GZ_MODEL=', gz_model_name,
+            ' PX4_MICRODDS_NS=',namespace,
+            " PX4_GZ_MODEL_POSE='",xpos,',',ypos,',',zpos,"'",
+            ' ./build/px4_sitl_default/bin/px4 -i ', instance_id
         ]],
         shell=True
     )
 
     ld = LaunchDescription()
 
+    ld.add_action(headless_launch_arg)
+    ld.add_action(gz_model_name_launch_arg)
+    ld.add_action(px4_autostart_id_launch_arg)
+    ld.add_action(instance_id_launch_arg)
+    ld.add_action(xpos_launch_arg)
+    ld.add_action(ypos_launch_arg)
+    ld.add_action(zpos_launch_arg)
+    ld.add_action(namespace_launch_arg)
+    ld.add_action(shell_launch_arg)
     ld.add_action(px4_sim_process)
 
     return ld

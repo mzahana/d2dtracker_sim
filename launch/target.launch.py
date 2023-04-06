@@ -2,31 +2,46 @@
 
 import os
 from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
 from launch_ros.actions import Node
+from ament_index_python import get_package_share_directory
+from launch_ros.substitutions import FindPackageShare
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PathJoinSubstitution
 
 def generate_launch_description():
     ld = LaunchDescription()
 
     # Node for Drone 0
     model_name = {'gz_model_name': 'x3_uav'}
-    autostart_id = {'px4_autostart_id': 4007}
-    instance_id = {'instance_id': 2}
-    xpos = {'xpos': 4.0}
-    ypos = {'ypos': 0.0}
-    zpos = {'zpos': 0.5}
-    headless= {'headless' : 0}
+    autostart_id = {'px4_autostart_id': '4007'}
+    instance_id = {'instance_id': '2'}
+    xpos = {'xpos': '4.0'}
+    ypos = {'ypos': '0.0'}
+    zpos = {'zpos': '0.5'}
+    headless= {'headless' : '0'}
 
     # Namespace
     ns='target'
-    
-    # Start the Python node that runs the shell command
-    node_cmd = Node(
-        package='d2dtracker_sim',
-        executable='gz_sim',
-        namespace=ns,
-        output='screen',
-        name='px4_'+ns,
-        parameters=[headless, model_name, autostart_id, instance_id, xpos, ypos, zpos]
+
+    gz_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('d2dtracker_sim'),
+                'gz_sim.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'namespace': ns,
+            'headless': headless['headless'],
+            'gz_model_name': model_name['gz_model_name'],
+            'px4_autostart_id': autostart_id['px4_autostart_id'],
+            'instance_id': instance_id['instance_id'],
+            'xpos': xpos['xpos'],
+            'ypos': ypos['ypos'],
+            'zpos': zpos['zpos'],
+            'shell': 'False'
+        }.items()
     )
 
     # TF odom NED -> ENU
@@ -49,7 +64,7 @@ def generate_launch_description():
         arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', 'world', ns+'/'+enu_frame['parent_frame']],
     )
 
-    ld.add_action(node_cmd)
+    ld.add_action(gz_launch)
     ld.add_action(tf_node)
     ld.add_action(map2pose_tf_node)
 

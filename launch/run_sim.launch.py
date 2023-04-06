@@ -5,30 +5,54 @@
 THIS SCRIPT DOES NOT WORK AS EXPECTED. DO NOT USE IT!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 """
-import os
 from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, TimerAction, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from ament_index_python import get_package_share_directory
+from launch_ros.substitutions import FindPackageShare
+from launch.substitutions import PathJoinSubstitution
+
+from launch.actions import (LogInfo, RegisterEventHandler)
+from launch.event_handlers import (OnExecutionComplete, OnProcessExit,
+                                OnProcessIO, OnProcessStart, OnShutdown)
+from launch.events import Shutdown
 
 def generate_launch_description():
     ld = LaunchDescription()
-
-    # Get the path to the package containing the launch files
-    my_package_dir = get_package_share_directory('d2dtracker_sim')
     
-    # Define the paths to the other launch files
-    target_launch_file = os.path.join(my_package_dir, 'target.launch.py')
-    interceptor_launch_file = os.path.join(my_package_dir, 'interceptor.launch.py')
-
-
     interceptor_launch = IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(interceptor_launch_file))
-    ld.add_action(interceptor_launch)
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('d2dtracker_sim'),
+                'interceptor.launch.py'
+            ])
+        ])
+    )
 
-    # target_launch = IncludeLaunchDescription(
-    #                 PythonLaunchDescriptionSource(target_launch_file))
+    target_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('d2dtracker_sim'),
+                'target.launch.py'
+            ])
+        ])
+    )
+
+    # event = RegisterEventHandler(
+    #     OnProcessStart(
+    #         target_action=interceptor_launch,
+    #         on_start=[
+    #             LogInfo(msg='Spawning target...'),
+    #             TimerAction(
+    #                 period=2.0,
+    #                 actions=[target_launch],
+    #             )
+    #         ]
+    #     )
+    # )
+
+
+    ld.add_action(interceptor_launch)
+    # This launches two Gazebo instances (GUIs)!
     # ld.add_action(target_launch)
 
     return ld
