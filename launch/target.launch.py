@@ -12,7 +12,7 @@ from launch.substitutions import PathJoinSubstitution
 def generate_launch_description():
     ld = LaunchDescription()
 
-    # Node for Drone 0
+    # Node for Drone 2
     model_name = {'gz_model_name': 'x3_uav'}
     autostart_id = {'px4_autostart_id': '4007'}
     instance_id = {'instance_id': '2'}
@@ -24,6 +24,7 @@ def generate_launch_description():
     # Namespace
     ns='target'
 
+    # PX4 SITL + Spawn x3
     gz_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -39,8 +40,7 @@ def generate_launch_description():
             'instance_id': instance_id['instance_id'],
             'xpos': xpos['xpos'],
             'ypos': ypos['ypos'],
-            'zpos': zpos['zpos'],
-            'shell': 'False'
+            'zpos': zpos['zpos']
         }.items()
     )
 
@@ -56,7 +56,7 @@ def generate_launch_description():
         parameters=[enu_frame, base_link]
     )
 
-    # Static TF map -> local_pose_ENU
+    # Static TF map(or world) -> local_pose_ENU
     map2pose_tf_node = Node(
         package='tf2_ros',
         name='map2px4_'+ns+'_tf_node',

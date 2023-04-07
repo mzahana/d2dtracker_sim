@@ -14,7 +14,7 @@ def generate_launch_description():
 
     ns='interceptor'
 
-    # Node for Drone 0
+    # Node for Drone 1
     model_name = {'gz_model_name': 'x500_d435'}
     autostart_id = {'px4_autostart_id': '4006'}
     instance_id = {'instance_id': '1'}
@@ -23,6 +23,7 @@ def generate_launch_description():
     zpos = {'zpos': '0.5'}
     headless= {'headless' : '0'}
 
+    # PX4 SITL + Spawn x500_d435
     gz_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -38,20 +39,22 @@ def generate_launch_description():
             'instance_id': instance_id['instance_id'],
             'xpos': xpos['xpos'],
             'ypos': ypos['ypos'],
-            'zpos': zpos['zpos'],
-            'shell': 'True'
+            'zpos': zpos['zpos']
         }.items()
     )
-    
-    # Start the Python node that runs the shell command
-    # node_cmd = Node(
-    #     package='d2dtracker_sim',
-    #     executable='gz_sim',
-    #     namespace=ns,
-    #     output='screen',
-    #     name='px4_'+ns,
-    #     parameters=[headless, model_name, autostart_id, instance_id, xpos, ypos, zpos]
-    # )
+
+    # MicroXRCEAgent
+    xrce_agent_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('d2dtracker_sim'),
+                'xrce_agent.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'port': '8888'
+        }.items()
+    )
 
     # TF odom NED -> ENU
     enu_frame= {'parent_frame' : 'local_pose_ENU'}
@@ -104,16 +107,6 @@ def generate_launch_description():
                    ],
     )
 
-    # Midro DDS agent
-    port={'port':8888}
-    dds_agent_node = Node(
-        package='d2dtracker_sim',
-        executable='microdds',
-        output='screen',
-        name='microdds_node',
-        parameters=[port]
-    )
-
     # Rviz2
     rviz_node = Node(
         package='rviz2',
@@ -128,7 +121,7 @@ def generate_launch_description():
     ld.add_action(map2pose_tf_node)
     ld.add_action(cam_tf_node)
     ld.add_action(ros_gz_bridge)
-    ld.add_action(dds_agent_node)
     ld.add_action(rviz_node)
+    ld.add_action(xrce_agent_launch)
 
     return ld

@@ -62,13 +62,6 @@ def generate_launch_description():
         default_value='0.2'
     )
 
-    shell_a = LaunchConfiguration('shell')
-    shell_launch_arg = DeclareLaunchArgument(
-        'shell',
-        default_value='True'
-    )
-
-
     cmd1_str="cd {} && ".format(PX4_DIR)
     cmd2_str="PX4_SYS_AUTOSTART={} PX4_GZ_MODEL={} PX4_MICRODDS_NS={} PX4_GZ_MODEL_POSE='{},{},{}' ./build/px4_sitl_default/bin/px4 -i {}".format(px4_autostart_id, gz_model_name, namespace, xpos,ypos,zpos, instance_id)
     cmd_str = cmd1_str+cmd2_str
@@ -94,7 +87,6 @@ def generate_launch_description():
     ld.add_action(ypos_launch_arg)
     ld.add_action(zpos_launch_arg)
     ld.add_action(namespace_launch_arg)
-    ld.add_action(shell_launch_arg)
     ld.add_action(px4_sim_process)
 
     return ld
