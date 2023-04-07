@@ -1,9 +1,9 @@
 import rclpy
 from rclpy.node import Node
-from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 import tf2_ros
 from px4_msgs.msg import VehicleOdometry
-from geometry_msgs.msg import TransformStamped, Quaternion
+from geometry_msgs.msg import TransformStamped, Quaternion, PoseStamped
 from nav_msgs.msg import Odometry
 from math import sqrt
 import numpy as np
@@ -43,13 +43,14 @@ class PX4TF(Node):
         self.declare_parameter('parent_frame', 'world')
         self._parent_frame = self.get_parameter('parent_frame').get_parameter_value().string_value
         
-        self.declare_parameter('child_frame', 'world')
+        self.declare_parameter('child_frame', 'base_link')
         self._child_frame = self.get_parameter('child_frame').get_parameter_value().string_value
 
         ## Configure subscriptions
         qos_profile = QoSProfile(
-            reliability=QoSReliabilityPolicy.BEST_EFFORT,
-            history=QoSHistoryPolicy.KEEP_LAST,
+            reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
+            durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL,
+            history=QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST,
             depth=1
         )
         self._odometry_sub = self.create_subscription(
@@ -60,19 +61,33 @@ class PX4TF(Node):
         )
 
         self._odometry_pub = self.create_publisher(Odometry, 'odometry', 10)
+        self._pose_pub = self.create_publisher(PoseStamped, 'pose', 10)
         timer_period = 0.05  # seconds
         self._tf_timer = self.create_timer(timer_period, self.tfPubCallback)
 
     def odomCallback(self, msg):
-        # print(msg)
+        pose_msg = PoseStamped()
+
         self._odom_msg.header.stamp = self.get_clock().now().to_msg()
         self._odom_msg.header.frame_id = self._ns+'/'+self._parent_frame
         self._odom_msg.child_frame_id = self._ns+'/'+self._child_frame
+
+        pose_msg.header.stamp = self.get_clock().now().to_msg()
+        pose_msg.header.frame_id = self._ns+'/'+self._parent_frame
 
         # Set position
         self._odom_msg.pose.pose.position.x = float(msg.position[0])
         self._odom_msg.pose.pose.position.y = -float(msg.position[1])
         self._odom_msg.pose.pose.position.z = -float(msg.position[2])
+
+        pose_msg.pose.position.x = float(msg.position[0])
+        pose_msg.pose.position.y = -float(msg.position[1])
+        pose_msg.pose.position.z = -float(msg.position[2])
+
+        # Set linear velocity
+        self._odom_msg.twist.twist.linear.x = float(msg.velocity[0])
+        self._odom_msg.twist.twist.linear.y = -float(msg.velocity[1])
+        self._odom_msg.twist.twist.linear.z = -float(msg.velocity[2])
 
         # Set orientation
         # q1 = Quaternion(w = 0.0, x = sqrt(2)/2, y = sqrt(2)/2, z = 0.0)
@@ -94,6 +109,11 @@ class PX4TF(Node):
         self._odom_msg.pose.pose.orientation.y = -float(msg.q[2])
         self._odom_msg.pose.pose.orientation.z = -float(msg.q[3])
 
+        pose_msg.pose.orientation.w = float(msg.q[0])
+        pose_msg.pose.orientation.x = float(msg.q[1])
+        pose_msg.pose.orientation.y = -float(msg.q[2])
+        pose_msg.pose.orientation.z = -float(msg.q[3])
+
         # self._odom_msg.pose.pose.orientation.w = q.w
         # self._odom_msg.pose.pose.orientation.x = q.x
         # self._odom_msg.pose.pose.orientation.y = q.y
@@ -101,6 +121,7 @@ class PX4TF(Node):
 
         # Publish odometry message
         self._odometry_pub.publish(self._odom_msg)
+        self._pose_pub.publish(pose_msg)
 
     def tfPubCallback(self):
         # Calculate transform from pose_frame to base_frame based on vehicle pose
