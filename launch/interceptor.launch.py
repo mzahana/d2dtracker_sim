@@ -15,6 +15,7 @@ def generate_launch_description():
     ns='interceptor'
 
     # Node for Drone 1
+    world = {'gz_world': 'default'}
     model_name = {'gz_model_name': 'x500_d435'}
     autostart_id = {'px4_autostart_id': '4006'}
     instance_id = {'instance_id': '1'}
@@ -34,6 +35,7 @@ def generate_launch_description():
         launch_arguments={
             'namespace': ns,
             'headless': headless['headless'],
+            'gz_world': world['gz_world'],
             'gz_model_name': model_name['gz_model_name'],
             'px4_autostart_id': autostart_id['px4_autostart_id'],
             'instance_id': instance_id['instance_id'],

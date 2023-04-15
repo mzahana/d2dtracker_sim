@@ -21,6 +21,7 @@ sleep 2
 echo && echo  "Copying files to ${PX4_DIR}" && echo
 sleep 1
 cp -r ${SCRIPT_DIR}/models/* ${PX4_DIR}/Tools/simulation/gz/models/
+cp -r ${SCRIPT_DIR}/worlds/* ${PX4_DIR}/Tools/simulation/gz/worlds/
 cp -r ${SCRIPT_DIR}/config/px4/* ${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/
 
 # Build px4_sitl

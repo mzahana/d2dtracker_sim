@@ -26,6 +26,12 @@ def generate_launch_description():
         default_value='0'
     )
 
+    gz_world = LaunchConfiguration('gz_world')
+    gz_world_launch_arg = DeclareLaunchArgument(
+        'gz_world',
+        default_value='default'
+    )
+
     gz_model_name = LaunchConfiguration('gz_model_name')
     gz_model_name_launch_arg = DeclareLaunchArgument(
         'gz_model_name',
@@ -72,6 +78,7 @@ def generate_launch_description():
             ' PX4_GZ_MODEL=', gz_model_name,
             ' PX4_MICRODDS_NS=',namespace,
             " PX4_GZ_MODEL_POSE='",xpos,',',ypos,',',zpos,"'",
+            ' PX4_GZ_WORLD=', gz_world,
             ' ./build/px4_sitl_default/bin/px4 -i ', instance_id
         ]],
         shell=True
@@ -80,6 +87,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     ld.add_action(headless_launch_arg)
+    ld.add_action(gz_world_launch_arg)
     ld.add_action(gz_model_name_launch_arg)
     ld.add_action(px4_autostart_id_launch_arg)
     ld.add_action(instance_id_launch_arg)
