@@ -62,6 +62,7 @@ fi
 echo && echo  "Copying files to ${PX4_DIR}" && echo
 sleep 1
 cp -r ${ROS2_SRC}/d2dtracker_sim/models/* ${PX4_DIR}/Tools/simulation/gz/models/
+cp -r ${ROS2_SRC}/d2dtracker_sim/worlds/* ${PX4_DIR}/Tools/simulation/gz/worlds/
 cp -r ${ROS2_SRC}/d2dtracker_sim//config/px4/* ${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/
 
 # Build px4_sitl
