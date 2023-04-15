@@ -26,11 +26,6 @@ The simulation deveopment environment is available in a self-contained docker im
     ```
     You should see a second quadcopter spawned in Gazebo
 
-* In 3rd terminal run the DDS agent node to receive ros topics
-    ```bash
-    ros2 run d2dtracker_sim microdds
-    ```
-
 * In 4th terminal, check the available ros topics
     ```bash
     ros2 topic list
