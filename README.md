@@ -34,3 +34,7 @@ The simulation deveopment environment is available in a self-contained docker im
     ```bash
     ros2 run rqt_tf_tree rqt_tf_tree
     ```
+
+# References
+* Building custom world SDF models: [webpage](https://gazebosim.org/docs/latest/sdf_worlds) , [video](https://youtu.be/48TX-XJ14Gs)
+* [Online gazebo model library](https://app.gazebosim.org/fuel)
