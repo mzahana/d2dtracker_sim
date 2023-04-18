@@ -83,6 +83,43 @@ fi
 #     cd $ROS2_SRC/px4_ros_com && git pull origin main
 # fi
 
+
+
+#
+# d2dtracker_drone_detector
+#
+PKG_URL=''
+if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/d2dtracker_drone_detector.git
+else
+    PKG_URL=https://github.com/mzahana/d2dtracker_drone_detector.git
+fi
+
+if [ ! -d "$ROS2_SRC/d2dtracker_drone_detector" ]; then
+    cd $ROS2_SRC
+    git clone ${PKG_URL}
+else
+    cd $ROS2_SRC/d2dtracker_drone_detector && git checkout main && git pull origin main
+fi
+
+
+#
+# multi_target_kf
+#
+PKG_URL=''
+if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/multi_target_kf.git
+else
+    PKG_URL=https://github.com/mzahana/multi_target_kf.git
+fi
+
+if [ ! -d "$ROS2_SRC/multi_target_kf" ]; then
+    cd $ROS2_SRC
+    git clone ${PKG_URL} -b ros2_humble
+else
+    cd $ROS2_SRC/multi_target_kf && git checkout ros2_humble && git pull origin ros2_humble
+fi
+
 #
 # custom_trajectory_msgs
 #
@@ -121,5 +158,5 @@ cd $ROS2_SRC/trajectory_prediction && . setup.sh
 cd $ROS2_WS && colcon build
 
 echo "DONE. Pkgs are built. Models and airframe config files are copied to the respective folder in the ${PX4_DIR} directory"
-echo "Source the ros2_ws and use <ros2 launch d2dtracker_sim run_sim.launch.py> to run the simulation"
+echo "Source the ros2_ws and use <ros2 launch d2dtracker_sim interceptor.launch.py> to run the simulation"
 cd $HOME
