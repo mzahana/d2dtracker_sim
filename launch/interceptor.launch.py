@@ -90,7 +90,9 @@ def generate_launch_description():
         package='tf2_ros',
         name=ns+'_base2depth_tf_node',
         executable='static_transform_publisher',
-        arguments=[str(cam_x), str(cam_y), str(cam_z), str(cam_yaw), str(cam_pitch), str(cam_roll), ns+'/'+base_link['child_frame'], ns+'/depth_camera'],
+        # arguments=[str(cam_x), str(cam_y), str(cam_z), str(cam_yaw), str(cam_pitch), str(cam_roll), ns+'/'+base_link['child_frame'], ns+'/depth_camera'],
+        arguments=[str(cam_x), str(cam_y), str(cam_z), str(cam_yaw), str(cam_pitch), str(cam_roll), ns+'/'+base_link['child_frame'], 'x500_d435_1/link/realsense_d435'],
+        
     )
 
     # Transport rgb and depth images from GZ topics to ROS topics    
