@@ -8,7 +8,7 @@ from ament_index_python import get_package_share_directory
 from launch_ros.substitutions import FindPackageShare
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
-
+from math import radians
 def generate_launch_description():
     ld = LaunchDescription()
 
@@ -83,9 +83,9 @@ def generate_launch_description():
     cam_x = 0.15
     cam_y = 0.0
     cam_z = 0.25
-    cam_roll = 0.0
+    cam_roll = radians(-90.0)
     cam_pitch = 0.0
-    cam_yaw = 0.0
+    cam_yaw = radians(-90.0)
     cam_tf_node = Node(
         package='tf2_ros',
         name=ns+'_base2depth_tf_node',
