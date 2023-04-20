@@ -33,7 +33,7 @@ def generate_launch_description():
             ])
         ]),
         launch_arguments={
-            'namespace': ns,
+            'gz_ns': ns,
             'headless': headless['headless'],
             'gz_model_name': model_name['gz_model_name'],
             'px4_autostart_id': autostart_id['px4_autostart_id'],

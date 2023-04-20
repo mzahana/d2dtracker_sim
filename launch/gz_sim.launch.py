@@ -14,9 +14,9 @@ def generate_launch_description():
         print('PX4_DIR is not set')
         sys.exit(1)
 
-    namespace = LaunchConfiguration('namespace')
+    namespace = LaunchConfiguration('gz_ns')
     namespace_launch_arg = DeclareLaunchArgument(
-        'namespace',
+        'gz_ns',
         default_value=''
     )
 
