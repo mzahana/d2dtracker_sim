@@ -132,9 +132,9 @@ fi
 
 if [ ! -d "$ROS2_SRC/custom_trajectory_msgs" ]; then
     cd $ROS2_SRC
-    git clone ${PKG_URL}
+    git clone ${PKG_URL} -b ros2_humble
 else
-    cd $ROS2_SRC/custom_trajectory_msgs && git pull origin ros2_humble
+    cd $ROS2_SRC/custom_trajectory_msgs && git checkout ros2_humble && git pull origin ros2_humble
 fi
 
 #
@@ -149,9 +149,9 @@ fi
 
 if [ ! -d "$ROS2_SRC/trajectory_prediction" ]; then
     cd $ROS2_SRC
-    git clone ${PKG_URL}
+    git clone ${PKG_URL} -b ros2_humble
 else
-    cd $ROS2_SRC/trajectory_prediction && git pull origin ros2_humble
+    cd $ROS2_SRC/trajectory_prediction && git checkout ros2_humble && git pull origin ros2_humble
 fi
 cd $ROS2_SRC/trajectory_prediction && . setup.sh
 
