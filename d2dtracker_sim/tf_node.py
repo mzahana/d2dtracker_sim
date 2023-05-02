@@ -76,17 +76,26 @@ class PX4TF(Node):
         pose_msg.header.frame_id = self._ns+'/'+self._parent_frame
 
         # Set position
-        self._odom_msg.pose.pose.position.x = float(msg.position[0])
-        self._odom_msg.pose.pose.position.y = -float(msg.position[1])
+        # self._odom_msg.pose.pose.position.x = float(msg.position[0])
+        # self._odom_msg.pose.pose.position.y = -float(msg.position[1])
+        # self._odom_msg.pose.pose.position.z = -float(msg.position[2])
+        self._odom_msg.pose.pose.position.x = float(msg.position[1])
+        self._odom_msg.pose.pose.position.y = float(msg.position[0])
         self._odom_msg.pose.pose.position.z = -float(msg.position[2])
 
-        pose_msg.pose.position.x = float(msg.position[0])
-        pose_msg.pose.position.y = -float(msg.position[1])
+        # pose_msg.pose.position.x = float(msg.position[0])
+        # pose_msg.pose.position.y = -float(msg.position[1])
+        # pose_msg.pose.position.z = -float(msg.position[2])
+        pose_msg.pose.position.x = float(msg.position[1])
+        pose_msg.pose.position.y = float(msg.position[0])
         pose_msg.pose.position.z = -float(msg.position[2])
 
         # Set linear velocity
-        self._odom_msg.twist.twist.linear.x = float(msg.velocity[0])
-        self._odom_msg.twist.twist.linear.y = -float(msg.velocity[1])
+        # self._odom_msg.twist.twist.linear.x = float(msg.velocity[0])
+        # self._odom_msg.twist.twist.linear.y = -float(msg.velocity[1])
+        # self._odom_msg.twist.twist.linear.z = -float(msg.velocity[2])
+        self._odom_msg.twist.twist.linear.x = float(msg.velocity[1])
+        self._odom_msg.twist.twist.linear.y = float(msg.velocity[0])
         self._odom_msg.twist.twist.linear.z = -float(msg.velocity[2])
 
         # Set orientation
@@ -104,14 +113,22 @@ class PX4TF(Node):
         # q_ned=np.array([msg.q[0], msg.q[1], msg.q[2], msg.q[3]])
         # q_enu = ned2enu(q_ned)
 
+        # self._odom_msg.pose.pose.orientation.w = float(msg.q[0])
+        # self._odom_msg.pose.pose.orientation.x = float(msg.q[1])
+        # self._odom_msg.pose.pose.orientation.y = -float(msg.q[2])
+        # self._odom_msg.pose.pose.orientation.z = -float(msg.q[3])
         self._odom_msg.pose.pose.orientation.w = float(msg.q[0])
-        self._odom_msg.pose.pose.orientation.x = float(msg.q[1])
-        self._odom_msg.pose.pose.orientation.y = -float(msg.q[2])
+        self._odom_msg.pose.pose.orientation.x = float(msg.q[2])
+        self._odom_msg.pose.pose.orientation.y = float(msg.q[1])
         self._odom_msg.pose.pose.orientation.z = -float(msg.q[3])
 
+        # pose_msg.pose.orientation.w = float(msg.q[0])
+        # pose_msg.pose.orientation.x = float(msg.q[1])
+        # pose_msg.pose.orientation.y = -float(msg.q[2])
+        # pose_msg.pose.orientation.z = -float(msg.q[3])
         pose_msg.pose.orientation.w = float(msg.q[0])
-        pose_msg.pose.orientation.x = float(msg.q[1])
-        pose_msg.pose.orientation.y = -float(msg.q[2])
+        pose_msg.pose.orientation.x = float(msg.q[2])
+        pose_msg.pose.orientation.y = float(msg.q[1])
         pose_msg.pose.orientation.z = -float(msg.q[3])
 
         # self._odom_msg.pose.pose.orientation.w = q.w

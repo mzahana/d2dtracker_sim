@@ -75,7 +75,7 @@ def generate_launch_description():
         package='tf2_ros',
         name='map2px4_'+ns+'_tf_node',
         executable='static_transform_publisher',
-        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', 'world', ns+'/'+enu_frame['parent_frame']],
+        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '1.570796', '0', '0', 'world', ns+'/'+enu_frame['parent_frame']],
     )
 
     # Static TF base_link -> depth_camera
