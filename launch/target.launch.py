@@ -14,7 +14,7 @@ def generate_launch_description():
 
     # Node for Drone 2
     model_name = {'gz_model_name': 'x3_uav'}
-    autostart_id = {'px4_autostart_id': '4007'}
+    autostart_id = {'px4_autostart_id': '4021'}
     instance_id = {'instance_id': '2'}
     xpos = {'xpos': '4.0'}
     ypos = {'ypos': '0.0'}
