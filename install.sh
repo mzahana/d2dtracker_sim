@@ -142,8 +142,11 @@ fi
 #
 PKG_URL=''
 if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    echo "GIT_USER=$GIT_USER , GIT_TOKEN=$GIT_TOKEN"
+    echo
     PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/trajectory_prediction.git
 else
+    echo "GIT_USER and GIT_TOKEN are not set"
     PKG_URL=https://github.com/mzahana/trajectory_prediction.git
 fi
 
