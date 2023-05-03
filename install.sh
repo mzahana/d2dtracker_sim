@@ -6,6 +6,11 @@ if [ -z "${DEV_DIR}" ]; then
   echo "Error: DEV_DIR environment variable is not set. Set it using export DEV_DIR=<DEV_DIR_deirectory_that_should_contain_PX4-Autopilot_and_ros2_ws>"
   exit 1
 fi
+echo "DEV_DIR=$DEV_DIR"
+sleep 1
+echo "GIT_USER=$GIT_USER"
+echo "GIT_TOKEN=$GIT_TOKEN"
+sleep 1
 
 ROS2_WS=$DEV_DIR/ros2_ws
 ROS2_SRC=$DEV_DIR/ros2_ws/src
