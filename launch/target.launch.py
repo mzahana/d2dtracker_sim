@@ -56,16 +56,28 @@ def generate_launch_description():
         parameters=[enu_frame, base_link]
     )
 
+    enu_frame= {'odom_frame' : 'local_pose_ENU'}
+    base_link= {'baselink_frame' : 'base_link'}
+    tf_period= {'tf_pub_period' : 0.02}
+    px4_ros_node = Node(
+        package='px4_ros_com',
+        executable='px4_ros',
+        output='screen',
+        name=ns+'_px4_ros_com',
+        namespace=ns,
+        parameters=[enu_frame, base_link, tf_period]
+    )
+
     # Static TF map(or world) -> local_pose_ENU
     map2pose_tf_node = Node(
         package='tf2_ros',
         name='map2px4_'+ns+'_tf_node',
         executable='static_transform_publisher',
-        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '1.570796', '0', '0', 'world', ns+'/'+enu_frame['parent_frame']],
+        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', 'world', ns+'/'+enu_frame['odom_frame']],
     )
 
     ld.add_action(gz_launch)
-    ld.add_action(tf_node)
+    ld.add_action(px4_ros_node)
     ld.add_action(map2pose_tf_node)
 
     return ld

@@ -70,12 +70,24 @@ def generate_launch_description():
         parameters=[enu_frame, base_link]
     )
 
+    enu_frame= {'odom_frame' : 'local_pose_ENU'}
+    base_link= {'baselink_frame' : 'base_link'}
+    tf_period= {'tf_pub_period' : 0.02}
+    px4_ros_node = Node(
+        package='px4_ros_com',
+        executable='px4_ros',
+        output='screen',
+        name=ns+'_px4_ros_com',
+        namespace=ns,
+        parameters=[enu_frame, base_link, tf_period]
+    )
+
     # Static TF map -> local_pose_ENU
     map2pose_tf_node = Node(
         package='tf2_ros',
         name='map2px4_'+ns+'_tf_node',
         executable='static_transform_publisher',
-        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '1.570796', '0', '0', 'world', ns+'/'+enu_frame['parent_frame']],
+        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0.0', '0', '0', 'world', ns+'/'+enu_frame['odom_frame']],
     )
 
     # Static TF base_link -> depth_camera
@@ -91,7 +103,7 @@ def generate_launch_description():
         name=ns+'_base2depth_tf_node',
         executable='static_transform_publisher',
         # arguments=[str(cam_x), str(cam_y), str(cam_z), str(cam_yaw), str(cam_pitch), str(cam_roll), ns+'/'+base_link['child_frame'], ns+'/depth_camera'],
-        arguments=[str(cam_x), str(cam_y), str(cam_z), str(cam_yaw), str(cam_pitch), str(cam_roll), ns+'/'+base_link['child_frame'], 'x500_d435_1/link/realsense_d435'],
+        arguments=[str(cam_x), str(cam_y), str(cam_z), str(cam_yaw), str(cam_pitch), str(cam_roll), ns+'/'+base_link['baselink_frame'], 'x500_d435_1/link/realsense_d435'],
         
     )
 
@@ -150,7 +162,7 @@ def generate_launch_description():
     )
 
     ld.add_action(gz_launch)
-    ld.add_action(tf_node)
+    # ld.add_action(tf_node)
     ld.add_action(map2pose_tf_node)
     ld.add_action(cam_tf_node)
     ld.add_action(ros_gz_bridge)
@@ -158,5 +170,6 @@ def generate_launch_description():
     ld.add_action(xrce_agent_launch)
     ld.add_action(drone_detection_launch)
     ld.add_action(kf_launch)
+    ld.add_action(px4_ros_node)
 
     return ld
