@@ -81,12 +81,25 @@ else
     cd $ROS2_SRC/px4_msgs && git pull origin main
 fi
 
-# if [ ! -d "$ROS2_SRC/px4_ros_com" ]; then
-#     cd $ROS2_SRC
-#     git clone https://github.com/PX4/px4_ros_com.git
-# else
-#     cd $ROS2_SRC/px4_ros_com && git pull origin main
-# fi
+#
+# custom px4_ros_com
+#
+PKG_URL=''
+if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    echo "GIT_USER=$GIT_USER , GIT_TOKEN=$GIT_TOKEN"
+    echo
+    PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/px4_ros_com.git
+else
+    echo "GIT_USER and GIT_TOKEN are not set"
+    PKG_URL=https://github.com/mzahana/px4_ros_com.git
+fi
+
+if [ ! -d "$ROS2_SRC/px4_ros_com" ]; then
+    cd $ROS2_SRC
+    git clone ${PKG_URL}
+else
+    cd $ROS2_SRC/px4_ros_com && git checkout main && git pull origin main
+fi
 
 
 
