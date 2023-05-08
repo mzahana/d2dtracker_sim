@@ -76,8 +76,20 @@ def generate_launch_description():
         arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', 'world', ns+'/'+enu_frame['odom_frame']],
     )
 
+    
+    offboard_control_node = Node(
+        package='d2dtracker_sim',
+        executable='offboard_control',
+        output='screen',
+        name='offboard_node',
+        namespace=ns,
+        parameters=[{"circle_radius": 5.0},
+                    {"circle_omega": 0.5}]
+    )
+
     ld.add_action(gz_launch)
     ld.add_action(px4_ros_node)
     ld.add_action(map2pose_tf_node)
+    # ld.add_action(offboard_control_node)
 
     return ld

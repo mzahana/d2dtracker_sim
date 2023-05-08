@@ -24,9 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'gz_sim = d2dtracker_sim.gz_sim:main',
             'tf_node = d2dtracker_sim.tf_node:main',
-            'microdds = d2dtracker_sim.microdds:main',
+            'offboard_control = d2dtracker_sim.offboard_control_node:main',
         ],
     },
 )
