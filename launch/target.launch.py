@@ -16,9 +16,9 @@ def generate_launch_description():
     model_name = {'gz_model_name': 'x3_uav'}
     autostart_id = {'px4_autostart_id': '4021'}
     instance_id = {'instance_id': '2'}
-    xpos = {'xpos': '4.0'}
+    xpos = {'xpos': '6.0'}
     ypos = {'ypos': '0.0'}
-    zpos = {'zpos': '0.5'}
+    zpos = {'zpos': '0.1'}
     headless= {'headless' : '0'}
 
     # Namespace
@@ -40,7 +40,7 @@ def generate_launch_description():
             'instance_id': instance_id['instance_id'],
             'xpos': xpos['xpos'],
             'ypos': ypos['ypos'],
-            'zpos': zpos['zpos']
+            'zpos': '0.0'
         }.items()
     )
 
@@ -83,13 +83,13 @@ def generate_launch_description():
         output='screen',
         name='offboard_node',
         namespace=ns,
-        parameters=[{"circle_radius": 5.0},
+        parameters=[{"circle_radius": 2.0},
                     {"circle_omega": 0.5}]
     )
 
     ld.add_action(gz_launch)
     ld.add_action(px4_ros_node)
     ld.add_action(map2pose_tf_node)
-    # ld.add_action(offboard_control_node)
+    ld.add_action(offboard_control_node)
 
     return ld

@@ -21,7 +21,7 @@ def generate_launch_description():
     instance_id = {'instance_id': '1'}
     xpos = {'xpos': '0.0'}
     ypos = {'ypos': '0.0'}
-    zpos = {'zpos': '0.5'}
+    zpos = {'zpos': '0.1'}
     headless= {'headless' : '0'}
 
     # PX4 SITL + Spawn x500_d435
@@ -41,7 +41,7 @@ def generate_launch_description():
             'instance_id': instance_id['instance_id'],
             'xpos': xpos['xpos'],
             'ypos': ypos['ypos'],
-            'zpos': zpos['zpos']
+            'zpos': '0.0'
         }.items()
     )
 
