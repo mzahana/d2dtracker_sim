@@ -176,6 +176,16 @@ else
 fi
 cd $ROS2_SRC/trajectory_prediction && . setup.sh
 
+#
+# yolov8
+#
+if [ ! -d "$ROS2_SRC/yolov8_ros" ]; then
+    cd $ROS2_SRC
+    git clone https://github.com/mgonzs13/yolov8_ros.git
+else
+    cd $ROS2_SRC/yolov8_ros && git pull origin main
+fi
+
 cd $ROS2_WS && colcon build
 
 echo "DONE. Pkgs are built. Models and airframe config files are copied to the respective folder in the ${PX4_DIR} directory"
