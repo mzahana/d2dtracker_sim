@@ -151,6 +151,21 @@ def generate_launch_description():
             'kf_ns' : ''
         }.items()
     )
+
+    # Trajectory prediction
+    predictor_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('trajectory_prediction'),
+                'launch/predictor.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'kf_topic': 'kf/good_tracks',
+            'namespace' : '',
+            'log_level' : 'info'
+        }.items()
+    )
     
     # Rviz2
     rviz_node = Node(
@@ -171,5 +186,6 @@ def generate_launch_description():
     ld.add_action(drone_detection_launch)
     ld.add_action(kf_launch)
     ld.add_action(px4_ros_node)
+    ld.add_action(predictor_launch)
 
     return ld
