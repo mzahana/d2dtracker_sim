@@ -147,7 +147,7 @@ def generate_launch_description():
             ])
         ]),
         launch_arguments={
-            'detections_topic': 'detections_poses',
+            'detections_topic': 'yolo_detections_poses',
             'kf_ns' : ''
         }.items()
     )
