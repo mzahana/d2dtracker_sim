@@ -84,7 +84,9 @@ def generate_launch_description():
         name='offboard_node',
         namespace=ns,
         parameters=[{"circle_radius": 2.0},
-                    {"circle_omega": 0.5}]
+                    {"circle_omega": 0.5},
+                    {"system_id": 3}
+                    ]
     )
 
     ld.add_action(gz_launch)

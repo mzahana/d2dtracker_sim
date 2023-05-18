@@ -40,9 +40,12 @@ class OffboardControl(Node):
         self.offboard_setpoint_counter_ = 0
 
         self.nav_state_ = VehicleStatus.NAVIGATION_STATE_MAX
+        self.is_armed_ = False
         self.dt_ = timer_period
         self.theta_ = 0.0
 
+        self.declare_parameter('system_id', 1)
+        self.sys_id_ = self.get_parameter('system_id').get_parameter_value().integer_value
         self.declare_parameter('circle_radius', 5.0)
         self.radius_ = self.get_parameter('circle_radius').get_parameter_value().double_value
         self.declare_parameter('circle_omega', 0.5)
@@ -53,11 +56,15 @@ class OffboardControl(Node):
         if self.offboard_altitude_ > 0:
             self.offboard_altitude_ = -1.0*self.offboard_altitude_
  
-    def vehicleStatusCallback(self, msg):
+    def vehicleStatusCallback(self, msg: VehicleStatus):
         # TODO: handle NED->ENU transformation
         print("NAV_STATUS: ", msg.nav_state)
         print("  - offboard status: ", VehicleStatus.NAVIGATION_STATE_OFFBOARD)
         self.nav_state_ = msg.nav_state
+        if msg.arming_state == VehicleStatus.ARMING_STATE_ARMED:
+            self.is_armed_ = True
+        else:
+            self.is_armed_ = False
 
     # def offbTimerCallback(self):
     #     if (self.offboard_setpoint_counter_ == 10):
@@ -77,7 +84,7 @@ class OffboardControl(Node):
     # Arm the vehicle
     def arm(self):
         self.publishVehicleCommand(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, 1.0)
-        self.get_logger().info("Arm command send")
+        self.get_logger().info("Arm command send to system {}".format(self.sys_id_))
 
     # Disarm the vehicle
     def disarm(self):
@@ -96,7 +103,7 @@ class OffboardControl(Node):
         msg.param1 = param1
         msg.param2 = param2
         msg.command = command  # command ID
-        msg.target_system = 1  # system which should execute the command
+        msg.target_system = self.sys_id_  # system which should execute the command
         msg.target_component = 1  # component which should execute the command, 0 for all components
         msg.source_system = 1  # system sending the command
         msg.source_component = 1  # component sending the command
@@ -116,17 +123,26 @@ class OffboardControl(Node):
         self.publisher_offboard_mode_.publish(msg)
 
     def cmdloopCallback(self):
+        if (self.offboard_setpoint_counter_ == 60):
+            # Change to Offboard mode after 10 setpoints
+            self.publishVehicleCommand(VehicleCommand.VEHICLE_CMD_DO_SET_MODE, 1., 6.)
+            # Arm the vehicle
+            self.arm()
+        
         # Publish offboard control modes
         self.publishOffboardControlMode()
-        if self.nav_state_ == VehicleStatus.NAVIGATION_STATE_OFFBOARD:
 
-            trajectory_msg = TrajectorySetpoint()
-            trajectory_msg.position[0] = self.radius_ * np.cos(self.theta_)
-            trajectory_msg.position[1] = self.radius_ * np.sin(self.theta_)
-            trajectory_msg.position[2] = self.offboard_altitude_
-            self.publisher_trajectory_.publish(trajectory_msg)
+        trajectory_msg = TrajectorySetpoint()
+        trajectory_msg.position[0] = self.radius_ * np.cos(self.theta_)
+        trajectory_msg.position[1] = self.radius_ * np.sin(self.theta_)
+        trajectory_msg.position[2] = self.offboard_altitude_
+        self.publisher_trajectory_.publish(trajectory_msg)
 
-            self.theta_ = self.theta_ + self.omega_ * self.dt_
+        self.theta_ = self.theta_ + self.omega_ * self.dt_
+
+        # stop the counter after reaching 11
+        if (self.offboard_setpoint_counter_ < 61):
+            self.offboard_setpoint_counter_ += 1
 
 
 def main(args=None):
