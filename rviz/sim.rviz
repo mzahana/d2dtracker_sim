@@ -167,10 +167,10 @@ Visualization Manager:
       Axes Radius: 0.009999999776482582
       Class: rviz_default_plugins/PoseArray
       Color: 255; 25; 0
-      Enabled: true
+      Enabled: false
       Head Length: 0.07000000029802322
       Head Radius: 0.029999999329447746
-      Name: Detections Poses
+      Name: Depth-Detections Poses
       Shaft Length: 0.23000000417232513
       Shaft Radius: 0.009999999776482582
       Shape: Arrow (Flat)
@@ -181,7 +181,7 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /detections_poses
-      Value: true
+      Value: false
     - Alpha: 1
       Arrow Length: 0.30000001192092896
       Axes Length: 0.30000001192092896
@@ -216,6 +216,27 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /dbg_image
+      Value: true
+    - Alpha: 1
+      Arrow Length: 0.30000001192092896
+      Axes Length: 0.30000001192092896
+      Axes Radius: 0.009999999776482582
+      Class: rviz_default_plugins/PoseArray
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.07000000029802322
+      Head Radius: 0.029999999329447746
+      Name: Yolo Poses
+      Shaft Length: 0.23000000417232513
+      Shaft Radius: 0.009999999776482582
+      Shape: Arrow (Flat)
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /yolo_detections_poses
       Value: true
   Enabled: true
   Global Options:
@@ -278,10 +299,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4903982877731323
+      Pitch: 0.8603979349136353
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.9453979730606079
+      Yaw: 0.7153981924057007
     Saved: ~
 Window Geometry:
   Depth Image:
