@@ -167,6 +167,22 @@ def generate_launch_description():
         }.items()
     )
     
+    # YOLOv8
+    yolov8_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('yolov8_bringup'),
+                'launch/yolov8.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'model': '/home/user/shared_volume/ros2_ws/src/d2dtracker_drone_detector/config/drone_detection_v3.pt',
+            'threshold' : '0.5',
+            'input_image_topic' : '/interceptor/image',
+            'device': 'cuda:0'
+        }.items()
+    )
+
     # Rviz2
     rviz_node = Node(
         package='rviz2',
@@ -187,5 +203,6 @@ def generate_launch_description():
     ld.add_action(kf_launch)
     ld.add_action(px4_ros_node)
     ld.add_action(predictor_launch)
+    ld.add_action(yolov8_launch)
 
     return ld
