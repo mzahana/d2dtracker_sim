@@ -183,6 +183,25 @@ def generate_launch_description():
         }.items()
     )
 
+    # Yolo to pose node
+    yolo2pose_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('d2dtracker_drone_detector'),
+                'yolo2pose.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'depth_topic': 'interceptor/depth_image',
+            'debug' : 'false',
+            'caminfo_topic' : 'interceptor/camera_info',
+            'detections_poses_topic': 'yolo_detections_poses',
+            'yolo_detections_topic': 'detections',
+            'detector_ns' : '',
+            'reference_frame' : 'world'
+        }.items()
+    )
+
     # Rviz2
     rviz_node = Node(
         package='rviz2',
@@ -204,5 +223,6 @@ def generate_launch_description():
     ld.add_action(px4_ros_node)
     ld.add_action(predictor_launch)
     ld.add_action(yolov8_launch)
+    ld.add_action(yolo2pose_launch)
 
     return ld
