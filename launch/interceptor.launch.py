@@ -79,7 +79,8 @@ def generate_launch_description():
         output='screen',
         name=ns+'_px4_ros_com',
         namespace=ns,
-        parameters=[enu_frame, base_link, tf_period]
+        parameters=[enu_frame, base_link, tf_period],
+        remappings=[('vio/ros_odom', 'vio/ros_odom')]
     )
 
     # Static TF map -> local_pose_ENU
