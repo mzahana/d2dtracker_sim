@@ -56,12 +56,12 @@
         <update_rate>20</update_rate>
         <topic>d435</topic>
         <camera name="camera">
-          <horizontal_fov>1.0472</horizontal_fov>
+          <horizontal_fov>1.501</horizontal_fov>
           <lens>
             <intrinsics>
               <!-- fx = fy = width / ( 2 * tan (hfov / 2 ) ) -->
-              <fx>554.25469</fx>
-              <fy>554.25469</fy>
+              <fx>343.15219</fx>
+              <fy>343.15219</fy>
               <!-- cx = ( width + 1 ) / 2 -->
               <cx>320.5</cx>
               <!-- cy = ( height + 1 ) / 2 -->
