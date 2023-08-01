@@ -83,9 +83,12 @@ def generate_launch_description():
         output='screen',
         name='offboard_node',
         namespace=ns,
-        parameters=[{"circle_radius": 1.5},
-                    {"circle_omega": 0.5},
-                    {"system_id": 3}
+        parameters=[ {'trajectory_type': 'infty'},
+                    {'system_id': 3},
+                    {'radius': 3.0},
+                    {'omega': 0.5},
+                    {'normal_vector': [1.0, 1.0, 1.0]},
+                    {'center': [5.0, 0.0, 5.0]},
                     ]
     )
 
