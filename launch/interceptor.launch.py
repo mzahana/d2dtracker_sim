@@ -125,19 +125,19 @@ def generate_launch_description():
     )
 
     # Drone detector
-    drone_detection_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('d2dtracker_drone_detector'),
-                'detection.launch.py'
-            ])
-        ]),
-        launch_arguments={
-            'detections_topic': 'detections_poses',
-            'depth_topic' : 'interceptor/depth_image',
-            'detector_ns': ''
-        }.items()
-    )
+    # drone_detection_launch = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([
+    #         PathJoinSubstitution([
+    #             FindPackageShare('d2dtracker_drone_detector'),
+    #             'detection.launch.py'
+    #         ])
+    #     ]),
+    #     launch_arguments={
+    #         'detections_topic': 'detections_poses',
+    #         'depth_topic' : 'interceptor/depth_image',
+    #         'detector_ns': ''
+    #     }.items()
+    # )
 
     # Kalman filter
     kf_launch = IncludeLaunchDescription(
@@ -219,7 +219,7 @@ def generate_launch_description():
     ld.add_action(ros_gz_bridge)
     ld.add_action(rviz_node)
     ld.add_action(xrce_agent_launch)
-    ld.add_action(drone_detection_launch)
+    # ld.add_action(drone_detection_launch)
     ld.add_action(kf_launch)
     ld.add_action(px4_ros_node)
     ld.add_action(predictor_launch)
