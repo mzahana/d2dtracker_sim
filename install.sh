@@ -120,8 +120,9 @@ fi
 if [ ! -d "$ROS2_SRC/d2dtracker_drone_detector" ]; then
     cd $ROS2_SRC
     git clone ${PKG_URL}
+    cd $ROS2_SRC/d2dtracker_drone_detector && git checkout ros2_humble && git pull origin ros2_humble
 else
-    cd $ROS2_SRC/d2dtracker_drone_detector && git checkout main && git pull origin main
+    cd $ROS2_SRC/d2dtracker_drone_detector && git checkout ros2_humble && git pull origin ros2_humble
 fi
 
 
