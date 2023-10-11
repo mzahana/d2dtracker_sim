@@ -13,7 +13,9 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('launch/*launch.[pxy][yma]*')),
-        (os.path.join('share', package_name), glob('rviz/*.rviz'))
+        (os.path.join('share', package_name), glob('rviz/*.rviz')),
+        (os.path.join('share', package_name), glob('config/mavros/*.yaml')),
+        (os.path.join('share', package_name), glob('config/kf/*.yaml'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
