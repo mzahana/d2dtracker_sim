@@ -190,7 +190,31 @@ if [ ! -d "$ROS2_SRC/yolov8_ros" ]; then
 else
     cd $ROS2_SRC/yolov8_ros && git pull origin main
 fi
-cd $ROS2_WS && rosdep init && rosdep install --from-paths src --ignore-src -r -y
+
+#
+# MAVROS
+#
+# these mavlink and mavros versions are working for ros2 humble
+# Sept 17, 2023
+echo "Cloning mavlink package ... " && sleep 1
+if [ ! -d "$ROS2_SRC/mavlink" ]; then
+    cd $ROS2_SRC
+    git clone  https://github.com/ros2-gbp/mavlink-gbp-release.git mavlink
+    cd $ROS2_SRC/mavlink && git checkout release/humble/mavlink/2023.9.9-1
+fi
+# Custom mavros pkg is required to handle TF issues in multi-vehicle simulation
+echo "Cloning custom mavros package ... " && sleep 1
+if [ ! -d "$ROS2_SRC/mavros" ]; then
+    cd $ROS2_SRC
+    git clone  https://github.com/mzahana/mavros.git
+    cd $ROS2_SRC/mavros && git checkout ros2_humble
+fi
+
+cd $ROS2_WS && rosdep init && rosdep update && rosdep install --from-paths src --ignore-src -r -y
+
+cd $ROS2_WS && colcon build --packages-up-to mavros
+
+cd $ROS2_WS && colcon build --packages-up-to mavros_extras
 
 cd $ROS2_WS && colcon build
 
