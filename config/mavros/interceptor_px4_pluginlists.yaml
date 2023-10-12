@@ -33,6 +33,10 @@
       - debug_value
       - geofence
       - nav_controller_output
+      - wind
+      - play_tune
+      - camera
+      - guided_target
 
 
     # plugin_allowlist:

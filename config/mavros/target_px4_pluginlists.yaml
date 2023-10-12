@@ -36,6 +36,7 @@
       - wind
       - play_tune
       - camera
+      - guided_target
 
     # plugin_allowlist:
     #   - 'sys_*'
