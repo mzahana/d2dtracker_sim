@@ -4,11 +4,6 @@ from rclpy.node import Node
 from rclpy.clock import Clock
 from rclpy.qos import QoSProfile, qos_profile_sensor_data, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
 
-from px4_msgs.msg import OffboardControlMode
-from px4_msgs.msg import TrajectorySetpoint
-from px4_msgs.msg import VehicleStatus
-from px4_msgs.msg import VehicleCommand
-
 from geometry_msgs.msg import PoseStamped, Point
 from nav_msgs.msg import Odometry, Path
 
@@ -74,7 +69,7 @@ class OffboardControl(Node):
         self.odom_ = Odometry() # latest odom
 
         self.status_sub_ = self.create_subscription(
-            VehicleStatus,
+            State,
             'mavros/state',
             self.vehicleStatusCallback,
             qos_profile_transient)
@@ -88,19 +83,13 @@ class OffboardControl(Node):
         self.vehicle_path_pub_ = self.create_publisher(Path, 'offboard_visualizer/vehicle_path', 10)
         self.setpoint_path_pub_ = self.create_publisher(Path, 'offboard_visualizer/setpoint_path', 10)
 
-        # self.vehicle_command_publisher_ = self.create_publisher(VehicleCommand, "/fmu/in/vehicle_command", 10)
-        # self.publisher_offboard_mode_ = self.create_publisher(OffboardControlMode, 'fmu/in/offboard_control_mode', qos_profile)
         self.setopint_pub_ = self.create_publisher(PositionTarget, 'mavros/setpoint_raw/local', qos_profile_sensor_data)
 
         timer_period = 0.02  # seconds
         self.cmd_timer_ = self.create_timer(timer_period, self.cmdloopCallback)
 
-        # timer_period = 0.1  # 100 milliseconds
-        # self.offboard_mode_timer_ = self.create_timer(timer_period, self.offbTimerCallback)
-
         self.offboard_setpoint_counter_ = 0
 
-        self.nav_state_ = VehicleStatus.NAVIGATION_STATE_MAX
         self.is_armed_ = False
         self.dt_ = timer_period
 
@@ -141,41 +130,7 @@ class OffboardControl(Node):
         msg.points = [tail_point, head_point]
         return msg
 
-    # Arm the vehicle
-    # def arm(self):
-    #     self.publishVehicleCommand(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, 1.0)
-    #     self.get_logger().info("Arm command send to system {}".format(self.sys_id_))
-
-    # # Disarm the vehicle
-    # def disarm(self):
-    #     self.publishVehicleCommand(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, 0.0)
-    #     self.get_logger().info("Disarm command send")
-
-
-    # def publishVehicleCommand(self, command, param1=0.0, param2=0.0):
-    #     msg = VehicleCommand()
-    #     msg.param1 = param1
-    #     msg.param2 = param2
-    #     msg.command = command  # command ID
-    #     msg.target_system = self.sys_id_  # system which should execute the command
-    #     msg.target_component = 1  # component which should execute the command, 0 for all components
-    #     msg.source_system = 1  # system sending the command
-    #     msg.source_component = 1  # component sending the command
-    #     msg.from_external = True
-    #     msg.timestamp = int(Clock().now().nanoseconds / 1000) # time in microseconds
-    #     self.vehicle_command_publisher_.publish(msg)
-
-
-    # def publishOffboardControlMode(self):
-    #     msg = OffboardControlMode()
-    #     msg.position = True
-    #     msg.velocity = False
-    #     msg.acceleration = False
-    #     msg.attitude = False
-    #     msg.body_rate = False
-    #     msg.timestamp = int(Clock().now().nanoseconds / 1000) # time in microseconds
-    #     self.publisher_offboard_mode_.publish(msg)
-
+   
     def cmdloopCallback(self):
 
         t_now = Clock().now()
@@ -209,7 +164,6 @@ class OffboardControl(Node):
         self.vehicle_path_pub_.publish(self.vehicle_path_msg_)
 
         # Publish time history of the vehicle path
-        # setpoint_pose_msg = vector2PoseMsg('map', self.setpoint_position, self.vehicle_attitude)
         setpoint_pose_msg = PoseStamped()
         setpoint_pose_msg.header.frame_id = self.odom_.header.frame_id
         setpoint_pose_msg.header.stamp = self.get_clock().now().to_msg()
