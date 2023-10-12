@@ -187,8 +187,9 @@ cd $ROS2_SRC/trajectory_prediction && . setup.sh
 if [ ! -d "$ROS2_SRC/yolov8_ros" ]; then
     cd $ROS2_SRC
     git clone https://github.com/mgonzs13/yolov8_ros.git
+    cd cd $ROS2_SRC/yolov8_ros && git checkout 2.0.1
 else
-    cd $ROS2_SRC/yolov8_ros && git pull origin main
+    cd $ROS2_SRC/yolov8_ros && git pull origin && git checkout 2.0.1
 fi
 
 #

@@ -44,36 +44,39 @@ def generate_launch_description():
         }.items()
     )
 
-    # TF odom NED -> ENU
-    enu_frame= {'parent_frame' : 'local_pose_ENU'}
-    base_link= {'child_frame' : 'base_link'}
-    tf_node = Node(
-        package='d2dtracker_sim',
-        executable='tf_node',
-        output='screen',
-        name=ns+'_ned2enu_tf',
-        namespace=ns,
-        parameters=[enu_frame, base_link]
-    )
-
-    enu_frame= {'odom_frame' : 'local_pose_ENU'}
-    base_link= {'baselink_frame' : 'base_link'}
-    tf_period= {'tf_pub_period' : 0.02}
-    px4_ros_node = Node(
-        package='px4_ros_com',
-        executable='px4_ros',
-        output='screen',
-        name=ns+'_px4_ros_com',
-        namespace=ns,
-        parameters=[enu_frame, base_link, tf_period]
-    )
+    # MAVROS
+    file_name = 'target_px4_pluginlists.yaml'
+    package_share_directory = get_package_share_directory('d2dtracker_sim')
+    plugins_file_path = os.path.join(package_share_directory, file_name)
+    file_name = 'target_px4_config.yaml'
+    config_file_path = os.path.join(package_share_directory, file_name)
+    mavros_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('d2dtracker_sim'),
+                'mavros.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'mavros_namespace' :ns+'/mavros',
+            'tgt_system': '3',
+            'fcu_url': 'udp://:14542@127.0.0.1:14559',
+            'pluginlists_yaml': plugins_file_path,
+            'config_yaml': config_file_path,
+            'base_link_frame': 'target/base_link',
+            'odom_frame': 'target/odom',
+            'map_frame': 'map'
+        }.items()
+    )    
 
     # Static TF map(or world) -> local_pose_ENU
+    map_frame = 'map'
+    odom_frame= 'odom'
     map2pose_tf_node = Node(
         package='tf2_ros',
         name='map2px4_'+ns+'_tf_node',
         executable='static_transform_publisher',
-        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', 'world', ns+'/'+enu_frame['odom_frame']],
+        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', map_frame, ns+'/'+odom_frame],
     )
 
     
@@ -93,8 +96,9 @@ def generate_launch_description():
     )
 
     ld.add_action(gz_launch)
-    ld.add_action(px4_ros_node)
+    # ld.add_action(px4_ros_node)
     ld.add_action(map2pose_tf_node)
-    ld.add_action(offboard_control_node)
+    # ld.add_action(offboard_control_node)
+    ld.add_action(mavros_launch)
 
     return ld
