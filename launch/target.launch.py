@@ -92,13 +92,18 @@ def generate_launch_description():
                     {'omega': 0.5},
                     {'normal_vector': [1.0, 1.0, 1.0]},
                     {'center': [5.0, 0.0, 5.0]},
-                    ]
+        ],
+        remappings=[
+            ('mavros/state', 'mavros/state'),
+            ('mavros/local_position/odom', 'mavros/local_position/odom'),
+            ('mavros/setpoint_raw/local', 'mavros/setpoint_raw/local')
+        ]
     )
 
     ld.add_action(gz_launch)
     # ld.add_action(px4_ros_node)
     ld.add_action(map2pose_tf_node)
-    # ld.add_action(offboard_control_node)
+    ld.add_action(offboard_control_node)
     ld.add_action(mavros_launch)
 
     return ld
