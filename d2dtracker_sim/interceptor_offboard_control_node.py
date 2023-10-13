@@ -96,6 +96,8 @@ class OffboardControl(Node):
                                     PositionTarget.IGNORE_VX + PositionTarget.IGNORE_VY + PositionTarget.IGNORE_VZ+ PositionTarget.IGNORE_YAW_RATE
         vel_yaw_mask = PositionTarget.IGNORE_AFX + PositionTarget.IGNORE_AFY + PositionTarget.IGNORE_AFZ + \
                                     PositionTarget.IGNORE_PX + PositionTarget.IGNORE_PY + PositionTarget.IGNORE_PZ+ PositionTarget.IGNORE_YAW_RATE
+        pos_vel_yaw_mask = PositionTarget.IGNORE_AFX + PositionTarget.IGNORE_AFY + PositionTarget.IGNORE_AFZ + \
+                                    PositionTarget.IGNORE_YAW_RATE
         setpoint_msg.type_mask = vel_yaw_mask
         setpoint_msg.position.x = x
         setpoint_msg.position.y = y

@@ -41,7 +41,7 @@ class OffboardControl(Node):
         if self.trajectory_type_== 'circle':
             self.trajectory_generator_ = Circle3D(np.array(self.normal_vector_), np.array(self.center_), radius=self.radius_, omega=self.omega_)
         elif self.trajectory_type_ == 'infty':
-            self.trajectory_generator_ = Infinity3D(np.array(self.normal_vector_), np.array([10, 0, 5]), radius=self.radius_, omega=self.omega_)
+            self.trajectory_generator_ = Infinity3D(np.array(self.normal_vector_), np.array(self.center_), radius=self.radius_, omega=self.omega_)
         else:
             raise ValueError("Invalid trajectory type. Supported types are 'circle', 'infty'.")
         
