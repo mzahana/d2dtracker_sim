@@ -28,6 +28,7 @@ setup(
         'console_scripts': [
             'tf_node = d2dtracker_sim.tf_node:main',
             'offboard_control = d2dtracker_sim.offboard_control_node:main',
+            'interceptor_offboard_control = d2dtracker_sim.interceptor_offboard_control_node:main',
         ],
     },
 )

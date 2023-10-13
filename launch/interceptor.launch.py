@@ -211,6 +211,20 @@ def generate_launch_description():
         }.items()
     )
 
+    interceptor_offboard_control_node = Node(
+        package='d2dtracker_sim',
+        executable='interceptor_offboard_control',
+        output='screen',
+        name='interceptor_offboard_node',
+        namespace=ns,
+        remappings=[
+            ('mavros/state', 'mavros/state'),
+            ('mavros/local_position/odom', 'mavros/local_position/odom'),
+            ('mavros/setpoint_raw/local', 'mavros/setpoint_raw/local'),
+            ('mpc_tracker/command/trajectory', '/mpc_tracker/command/trajectory')
+        ]
+    )
+
     # Rviz2
     rviz_node = Node(
         package='rviz2',
@@ -234,5 +248,6 @@ def generate_launch_description():
     ld.add_action(yolov8_launch)
     ld.add_action(yolo2pose_launch)
     ld.add_action(mavros_launch)
+    ld.add_action(interceptor_offboard_control_node)
 
     return ld
