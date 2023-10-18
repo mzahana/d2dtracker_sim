@@ -78,6 +78,7 @@ cp -r ${ROS2_SRC}/d2dtracker_sim//config/px4/* ${PX4_DIR}/ROMFS/px4fmu_common/in
 cd $PX4_DIR && make px4_sitl
 
 # Clone some PX4 rose-related packages
+# px4_msgs not needed anymore since we are using mavros, but kkeeping it in case it is needed in future
 if [ ! -d "$ROS2_SRC/px4_msgs" ]; then
     cd $ROS2_SRC
     git clone https://github.com/PX4/px4_msgs.git
@@ -87,6 +88,7 @@ fi
 
 #
 # custom px4_ros_com
+# Not needed anymore
 #
 PKG_URL=''
 if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
@@ -180,6 +182,27 @@ else
     cd $ROS2_SRC/trajectory_prediction && git checkout ros2_humble && git pull origin ros2_humble
 fi
 cd $ROS2_SRC/trajectory_prediction && . setup.sh
+
+#
+# custom mav_controllers_ros
+#
+PKG_URL=''
+if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    echo "GIT_USER=$GIT_USER , GIT_TOKEN=$GIT_TOKEN"
+    echo
+    PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/mav_controllers_ros.git
+else
+    echo "GIT_USER and GIT_TOKEN are not set"
+    PKG_URL=https://github.com/mzahana/mav_controllers_ros.git
+fi
+
+if [ ! -d "$ROS2_SRC/mav_controllers_ros" ]; then
+    cd $ROS2_SRC
+    git clone ${PKG_URL}
+    cd $ROS2_SRC/mav_controllers_ros && git checkout ros2_humble
+else
+    cd $ROS2_SRC/mav_controllers_ros && git checkout ros2_humble && git pull origin ros2_humble
+fi
 
 #
 # yolov8
