@@ -45,19 +45,6 @@ def generate_launch_description():
         }.items()
     )
 
-    # MicroXRCEAgent
-    # xrce_agent_launch = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([
-    #         PathJoinSubstitution([
-    #             FindPackageShare('d2dtracker_sim'),
-    #             'xrce_agent.launch.py'
-    #         ])
-    #     ]),
-    #     launch_arguments={
-    #         'port': '8888'
-    #     }.items()
-    # )
-
     # MAVROS
     file_name = 'interceptor_px4_pluginlists.yaml'
     package_share_directory = get_package_share_directory('d2dtracker_sim')
@@ -128,21 +115,6 @@ def generate_launch_description():
                    ],
     )
 
-    # Drone detector
-    # drone_detection_launch = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([
-    #         PathJoinSubstitution([
-    #             FindPackageShare('d2dtracker_drone_detector'),
-    #             'detection.launch.py'
-    #         ])
-    #     ]),
-    #     launch_arguments={
-    #         'detections_topic': 'detections_poses',
-    #         'depth_topic' : 'interceptor/depth_image',
-    #         'detector_ns': ''
-    #     }.items()
-    # )
-
     # Kalman filter
     file_name = 'kf_param.yaml'
     package_share_directory = get_package_share_directory('d2dtracker_sim')
@@ -207,7 +179,7 @@ def generate_launch_description():
             'detections_poses_topic': 'yolo_detections_poses',
             'yolo_detections_topic': 'detections',
             'detector_ns' : '',
-            'reference_frame' : 'map'
+            'reference_frame' : 'interceptor/odom'
         }.items()
     )
 
@@ -225,6 +197,40 @@ def generate_launch_description():
         ]
     )
 
+    # geometric controller node
+    file_name = 'geometric_controller.yaml'
+    package_share_directory = get_package_share_directory('d2dtracker_sim')
+    geometric_controller_file_path = os.path.join(package_share_directory, file_name)
+    geometric_controller_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('mav_controllers_ros'),
+                'launch/geometric_controller.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'yaml_path': geometric_controller_file_path,
+            'controller_ns': ns
+            }.items()
+    )
+
+    # Geometric controller mavros interface node
+    file_name = 'geometric_mavros.yaml'
+    package_share_directory = get_package_share_directory('d2dtracker_sim')
+    geometric_mavros_file_path = os.path.join(package_share_directory, file_name)
+    geometric_to_mavros_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('mav_controllers_ros'),
+                'launch/geometric_to_mavros.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'param_file': geometric_mavros_file_path,
+            'mavros_ns': ns
+            }.items()
+    )
+
     # Rviz2
     rviz_node = Node(
         package='rviz2',
@@ -235,19 +241,17 @@ def generate_launch_description():
     )
 
     ld.add_action(gz_launch)
-    # ld.add_action(tf_node)
     ld.add_action(map2pose_tf_node)
     ld.add_action(cam_tf_node)
     ld.add_action(ros_gz_bridge)
     ld.add_action(rviz_node)
-    # ld.add_action(xrce_agent_launch)
-    # ld.add_action(drone_detection_launch)
     ld.add_action(kf_launch)
-    # ld.add_action(px4_ros_node)
     ld.add_action(predictor_launch)
     ld.add_action(yolov8_launch)
     ld.add_action(yolo2pose_launch)
     ld.add_action(mavros_launch)
-    ld.add_action(interceptor_offboard_control_node)
+    ld.add_action(geometric_controller_launch)
+    ld.add_action(geometric_to_mavros_launch)
+    # ld.add_action(interceptor_offboard_control_node)
 
     return ld
