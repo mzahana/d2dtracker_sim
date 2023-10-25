@@ -55,13 +55,17 @@ if [ ! -d "$PX4_DIR" ]; then
     cd $DEV_DIR
     git clone https://github.com/PX4/PX4-Autopilot.git --recursive
     cd $PX4_DIR
-    git checkout v1.14.0-rc2
+    git checkout v1.14.0
     make submodulesclean
     make clean
     make distclean
 else
     echo "PX4_DIR=$PX4_DIR already exists"
     cd $PX4_DIR
+    make submodulesclean
+    make clean
+    make distclean
+    git checkout v1.14.0
     make submodulesclean
     make clean
     make distclean
