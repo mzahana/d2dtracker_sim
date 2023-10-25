@@ -172,7 +172,6 @@ fi
 PKG_URL=''
 if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
     echo "GIT_USER=$GIT_USER , GIT_TOKEN=$GIT_TOKEN"
-    echo
     PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/trajectory_prediction.git
 else
     echo "GIT_USER and GIT_TOKEN are not set"
@@ -186,6 +185,26 @@ else
     cd $ROS2_SRC/trajectory_prediction && git checkout ros2_humble && git pull origin ros2_humble
 fi
 cd $ROS2_SRC/trajectory_prediction && . setup.sh
+
+#
+# trajectory_generation
+#
+PKG_URL=''
+if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    echo "GIT_USER=$GIT_USER , GIT_TOKEN=$GIT_TOKEN"
+    PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/trajectory_generation.git
+else
+    echo "GIT_USER and GIT_TOKEN are not set"
+    PKG_URL=https://github.com/mzahana/trajectory_generation.git
+fi
+
+if [ ! -d "$ROS2_SRC/trajectory_generation" ]; then
+    cd $ROS2_SRC
+    git clone ${PKG_URL} -b ros2_humble
+else
+    cd $ROS2_SRC/trajectory_generation && git checkout ros2_humble && git pull origin ros2_humble
+fi
+cd $ROS2_SRC/trajectory_generation && . setup.sh
 
 #
 # custom mav_controllers_ros
