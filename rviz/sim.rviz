@@ -454,7 +454,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /mpc_tracker/path
+        Value: /mpc/out/path
       Value: true
   Enabled: true
   Global Options:
