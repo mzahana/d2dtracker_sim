@@ -233,7 +233,7 @@ fi
 if [ ! -d "$ROS2_SRC/yolov8_ros" ]; then
     cd $ROS2_SRC
     git clone https://github.com/mgonzs13/yolov8_ros.git
-    cd cd $ROS2_SRC/yolov8_ros && git checkout 2.0.1
+    cd $ROS2_SRC/yolov8_ros && git checkout 2.0.1
 else
     cd $ROS2_SRC/yolov8_ros && git pull origin && git checkout 2.0.1
 fi
@@ -259,9 +259,9 @@ fi
 
 cd $ROS2_WS && rosdep init && rosdep update && rosdep install --from-paths src --ignore-src -r -y
 
-cd $ROS2_WS && colcon build --packages-up-to mavros
+cd $ROS2_WS && MAKEFLAGS='j1 -l1' colcon  build --packages-up-to mavros --executor sequential
 
-cd $ROS2_WS && colcon build --packages-up-to mavros_extras
+cd $ROS2_WS && MAKEFLAGS='j1 -l1' colcon build --packages-up-to mavros_extras --executor sequential
 
 cd $ROS2_WS && colcon build
 
