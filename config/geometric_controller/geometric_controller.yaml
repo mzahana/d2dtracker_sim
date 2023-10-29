@@ -35,6 +35,6 @@
     attctrl_tau: 0.4
     max_pos_int: 1.0
     mas_pos_int_b: 1.0
-    max_tilt_angle: 0.7853  # rad
+    max_tilt_angle: 0.6853  # rad
     max_accel: 10.0
     yaw_gain: 0.4 # For the reduced attitude controller
