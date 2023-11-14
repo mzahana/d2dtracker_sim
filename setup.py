@@ -31,6 +31,7 @@ setup(
             'offboard_control = d2dtracker_sim.offboard_control_node:main',
             'interceptor_offboard_control = d2dtracker_sim.interceptor_offboard_control_node:main',
             'gt_target_tf = d2dtracker_sim.gt_target_tf:main',
+            'execute_random_trajectories = d2dtracker_sim.execute_random_trajectories_node:main',
         ],
     },
 )
