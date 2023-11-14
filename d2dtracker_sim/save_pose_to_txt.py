@@ -8,13 +8,12 @@ import csv
 class PoseSubscriber(Node):
     def __init__(self):
         super().__init__('pose_subscriber')
-        self.subscription = self.create_subscription(
+        self.create_subscription(
             PoseStamped,
             '/target/mavros/local_position/pose',
             self.pose_callback,
             qos_profile_sensor_data)
-        self.subscription  # prevent unused variable warning
-        self.csv_file = '/home/user/shared_volume/gazebo_sim_line.csv'
+        self.csv_file = '/home/user/shared_volume/gazebo_sim_joystick_1.csv'
         # Open the CSV file
         self.file = open(self.csv_file, 'w', newline='')
         self.csv_writer = csv.writer(self.file)
