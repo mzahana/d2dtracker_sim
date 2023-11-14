@@ -94,6 +94,7 @@ def generate_launch_description():
                     {'num_traj': 200},
                     {'traj_2D': True},
                     {'traj_directory': '/home/user/shared_volume/gazebo_trajectories/'},
+                    {'file_name': 'gazebo_trajectory2D'},
         ],
         remappings=[
             ('mavros/state', 'mavros/state'),

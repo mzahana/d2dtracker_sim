@@ -51,6 +51,9 @@ class OffboardControl(Node):
         self.declare_parameter('traj_directory', '/home/user/shared_volume/gazebo_trajectories/')
         self.traj_directory_ = self.get_parameter('traj_directory').get_parameter_value().string_value
 
+        self.declare_parameter('file_name', 'gazebo_trajectory')
+        self.file_name_ = self.get_parameter('file_name').get_parameter_value().string_value
+
         self.traj_objects_=[]
         self.traj_objects_.append(Circle3D(np.array([0,0,1]), np.array([0,0,1]), radius=1, omega=0.5))
         self.traj_objects_.append(Infinity3D(np.array([0,0,1]), np.array([0,0,1]), radius=1, omega=0.5))
@@ -71,7 +74,7 @@ class OffboardControl(Node):
         self.first_point_t_ = Clock().now().nanoseconds/1000/1000/1000
 
         self.csv_dir_ = self.traj_directory_
-        self.csv_file_ = self.csv_dir_+ 'gazebo_trajectory_1.csv'
+        self.csv_file_ = self.csv_dir_+ self.file_name_+'_1.csv'
         # Open the CSV file
         self.file_ = open(self.csv_file_, 'w', newline='')
         self.csv_writer_ = csv.writer(self.file_)
@@ -169,7 +172,7 @@ class OffboardControl(Node):
    
     def generateRandomNormalVector(self):
         vector = np.random.normal(size=3)
-        if np.linalg.norm(vector) < 1e-6:
+        if np.linalg.norm(vector) < 1e-6 or self.traj_2D_:
             return np.array([0, 0, 1])
         return vector
 
@@ -254,7 +257,7 @@ class OffboardControl(Node):
             self.get_logger().info(f'Starting trajectory # {self.traj_counter_}.')
             # TODO close file of this trajectory and open a new one to record actual positions
             self.file_.close()
-            self.csv_file_ = self.csv_dir_+f'gazebo_trajectory_{self.traj_counter_}.csv'
+            self.csv_file_ = self.csv_dir_+f'{self.file_name_}_{self.traj_counter_}.csv'
             # Open the CSV file
             self.file_ = open(self.csv_file_, 'w', newline='')
             self.csv_writer_ = csv.writer(self.file_)
