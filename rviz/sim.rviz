@@ -466,7 +466,7 @@ Visualization Manager:
       Length: 0.30000001192092896
       Line Style: Lines
       Line Width: 0.029999999329447746
-      Name: GRU Evaluation - True predicted path
+      Name: GRU Position Prediction
       Offset:
         X: 0
         Y: 0
@@ -614,25 +614,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 20.84235382080078
+      Distance: 39.38737487792969
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -4.657242298126221
-        Y: -1.1857761144638062
-        Z: 1.839401125907898
+        X: 2.278676748275757
+        Y: -3.072960615158081
+        Z: 1.7729365825653076
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7753981351852417
+      Pitch: 0.8103981018066406
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.6254174709320068
+      Yaw: 1.2954177856445312
     Saved: ~
 Window Geometry:
   Depth Image:
