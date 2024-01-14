@@ -55,6 +55,9 @@ if [ ! -d "$PX4_DIR" ]; then
     cd $DEV_DIR
     git clone https://github.com/PX4/PX4-Autopilot.git --recursive
     cd $PX4_DIR
+    make submodulesclean
+    make clean
+    make distcle
     git checkout v1.14.0
     make submodulesclean
     make clean
