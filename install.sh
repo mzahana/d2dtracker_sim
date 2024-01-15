@@ -57,7 +57,7 @@ if [ ! -d "$PX4_DIR" ]; then
     cd $PX4_DIR
     make submodulesclean
     make clean
-    make distcle
+    make distclean
     git checkout v1.14.0
     make submodulesclean
     make clean
