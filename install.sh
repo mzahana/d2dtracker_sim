@@ -55,9 +55,6 @@ if [ ! -d "$PX4_DIR" ]; then
     cd $DEV_DIR
     git clone https://github.com/PX4/PX4-Autopilot.git --recursive
     cd $PX4_DIR
-    make submodulesclean
-    make clean
-    make distclean
     git checkout v1.14.0
     make submodulesclean
     make clean
@@ -74,14 +71,15 @@ else
     make distclean
 fi
 
+# Build px4_sitl
+cd $PX4_DIR && make px4_sitl
+
 # Copy files to $PX4_DIR
 echo && echo  "Copying files to ${PX4_DIR}" && echo
 sleep 1
 cp -r ${ROS2_SRC}/d2dtracker_sim/models/* ${PX4_DIR}/Tools/simulation/gz/models/
 cp -r ${ROS2_SRC}/d2dtracker_sim/worlds/* ${PX4_DIR}/Tools/simulation/gz/worlds/
 cp -r ${ROS2_SRC}/d2dtracker_sim//config/px4/* ${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/
-
-# Build px4_sitl
 cd $PX4_DIR && make px4_sitl
 
 # Clone some PX4 rose-related packages
