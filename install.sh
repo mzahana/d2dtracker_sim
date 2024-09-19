@@ -169,6 +169,7 @@ fi
 
 #
 # trajectory_prediction
+# Constant celocity and Bezier based trajectory prediction
 #
 PKG_URL=''
 if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
@@ -188,7 +189,29 @@ fi
 cd $ROS2_SRC/trajectory_prediction && . setup.sh
 
 #
+# drone_path_predictor_ros
+# GRU-based trajectory prediction
+# This is better than trajectory_prediction
+#
+PKG_URL=''
+if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
+    echo "GIT_USER=$GIT_USER , GIT_TOKEN=$GIT_TOKEN"
+    PKG_URL=https://$GIT_USER:$GIT_TOKEN@github.com/mzahana/drone_path_predictor_ros.git
+else
+    echo "GIT_USER and GIT_TOKEN are not set"
+    PKG_URL=https://github.com/mzahana/drone_path_predictor_ros.git
+fi
+
+if [ ! -d "$ROS2_SRC/drone_path_predictor_ros" ]; then
+    cd $ROS2_SRC
+    git clone ${PKG_URL} -b ros2_humble
+else
+    cd $ROS2_SRC/drone_path_predictor_ros && git checkout ros2_humble && git pull origin ros2_humble
+fi
+
+#
 # trajectory_generation
+# MPC-based trajectory generation
 #
 PKG_URL=''
 if [[ -n "$GIT_USER" ]] && [[ -n "$GIT_TOKEN" ]]; then
