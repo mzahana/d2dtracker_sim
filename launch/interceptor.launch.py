@@ -184,6 +184,48 @@ def generate_launch_description():
         }.items()
     )
 
+    
+    # drone_path_predictor_ros node (GRU based drone trajectory prediction)
+    # The yaml file is inside drone_path_predictor_ros/config
+    file_name = 'trajectory_predictor.yaml'
+    package_share_directory = get_package_share_directory('d2dtracker_sim')
+    traj_pred_file_path = os.path.join(package_share_directory, file_name)
+    gru_traj_prediction_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('drone_path_predictor_ros'),
+                'launch/trajectory_predictor.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'gru_namespace': ns,
+            'param_file': traj_pred_file_path,
+            'pose_topic' : '/kf/good_tracks_pose_array',
+        }.items()
+    )
+    
+    # trajectory_generation node (MPC with 12 states)
+    # The yaml file is inside trajectory_generation/config
+    file_name = 'mpc_12state.yaml'
+    package_share_directory = get_package_share_directory('d2dtracker_sim')
+    traj_gen_file_path = os.path.join(package_share_directory, file_name)
+    mpc_traj_gen_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('trajectory_generation'),
+                'launch/mpc_12state.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'mpc_namespace': ns,
+            'yaml_path': traj_gen_file_path,
+            'mpc_odom_topic' : 'mavros/local_position/odom',
+            'mpc_imu_topic' : 'mavros/imu/data',
+            'mpc_ref_path_topic': 'out/gru_predicted_path',
+            'mpc_cmd_topic': 'geometric_controller/multi_dof_setpoint',
+        }.items()
+    )
+
     interceptor_offboard_control_node = Node(
         package='d2dtracker_sim',
         executable='interceptor_offboard_control',
@@ -245,14 +287,17 @@ def generate_launch_description():
     ld.add_action(map2pose_tf_node)
     ld.add_action(cam_tf_node)
     ld.add_action(ros_gz_bridge)
-    ld.add_action(rviz_node)
-    ld.add_action(kf_launch)
-    ld.add_action(predictor_launch)
+    ld.add_action(kf_launch) # Estimates target's states based on position measurements( Reqiures yolov8_launch & yolo2pose_launch OR gt_target_tf)
+    # ld.add_action(predictor_launch) # WARNING will be removed in the future
     ld.add_action(yolov8_launch)
-    ld.add_action(yolo2pose_launch)
+    # ld.add_action(yolo2pose_launch) # Comment this if you want to use the target ground truth (gt_target_tf.launch.py)
     ld.add_action(mavros_launch)
     ld.add_action(geometric_controller_launch)
     ld.add_action(geometric_to_mavros_launch)
-    # ld.add_action(interceptor_offboard_control_node)
+    ld.add_action(gru_traj_prediction_launch)
+    ld.add_action(mpc_traj_gen_launch)
+    ld.add_action(rviz_node)
+    
+    # ld.add_action(interceptor_offboard_control_node) # WARNING Not used
 
     return ld
