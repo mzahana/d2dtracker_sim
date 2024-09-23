@@ -81,7 +81,7 @@ def generate_launch_description():
         package='tf2_ros',
         name='map2px4_'+ns+'_tf_node',
         executable='static_transform_publisher',
-        arguments=[str(xpos['xpos']), str(ypos['ypos']), '0', '0', '0', '0', map_frame, ns+'/'+odom_frame],
+        arguments=[str(xpos['xpos']), str(ypos['ypos']), str(zpos['zpos']), '0', '0', '0', map_frame, ns+'/'+odom_frame],
     )
 
     
