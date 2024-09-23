@@ -16,9 +16,14 @@ def generate_launch_description():
     model_name = {'gz_model_name': 'x3_uav'}
     autostart_id = {'px4_autostart_id': '4021'}
     instance_id = {'instance_id': '2'}
-    xpos = {'xpos': '4.0'}
-    ypos = {'ypos': '0.0'}
-    zpos = {'zpos': '0.1'}
+    # For default world
+    # xpos = {'xpos': '4.0'}
+    # ypos = {'ypos': '0.0'}
+    # zpos = {'zpos': '0.1'}
+    # For ihunter_world
+    xpos = {'xpos': '200.0'}
+    ypos = {'ypos': '100.0'}
+    zpos = {'zpos': '7.0'}
     headless= {'headless' : '0'}
 
     # Namespace
@@ -40,7 +45,7 @@ def generate_launch_description():
             'instance_id': instance_id['instance_id'],
             'xpos': xpos['xpos'],
             'ypos': ypos['ypos'],
-            'zpos': '0.0'
+            'zpos': zpos['zpos']
         }.items()
     )
 

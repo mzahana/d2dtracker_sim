@@ -72,7 +72,7 @@
     <include>
       <uri>model://red_box/model.sdf</uri>
       <name>red_box</name>
-      <pose relative_to="sand_frame">-250 80 -35.7 0 0 0</pose>
+      <pose relative_to="sand_frame">200 100 6 0 0 0</pose>
     </include>
     <include>
       <uri>model://radar_pole/model.sdf</uri>

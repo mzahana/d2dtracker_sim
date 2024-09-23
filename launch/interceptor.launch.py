@@ -15,13 +15,19 @@ def generate_launch_description():
     ns='interceptor'
 
     # Node for Drone 1
-    world = {'gz_world': 'default'}
+    # world = {'gz_world': 'default'}
+    world = {'gz_world': 'ihunter_world'}
     model_name = {'gz_model_name': 'x500_d435'}
     autostart_id = {'px4_autostart_id': '4020'}
     instance_id = {'instance_id': '1'}
-    xpos = {'xpos': '0.0'}
-    ypos = {'ypos': '0.0'}
-    zpos = {'zpos': '0.1'}
+    # for 'default' world
+    # xpos = {'xpos': '0.0'}
+    # ypos = {'ypos': '0.0'}
+    # zpos = {'zpos': '0.1'}
+    # For 'ihunter_world'
+    xpos = {'xpos': '-24.0'}
+    ypos = {'ypos': '8.0'}
+    zpos = {'zpos': '1.0'}
     headless= {'headless' : '0'}
 
     # PX4 SITL + Spawn x500_d435
@@ -41,7 +47,7 @@ def generate_launch_description():
             'instance_id': instance_id['instance_id'],
             'xpos': xpos['xpos'],
             'ypos': ypos['ypos'],
-            'zpos': '0.0'
+            'zpos': zpos['zpos']
         }.items()
     )
 
