@@ -280,6 +280,24 @@ def generate_launch_description():
             }.items()
     )
 
+    # Drone marker in RViz
+    quadcopter_marker_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('d2dtracker_sim'),
+                'quadcopter_marker.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'node_ns':ns,
+            'propeller_size': '0.15',                # Set propeller_size directly
+            'arm_length': '0.3',                    # Set arm_length directly
+            'body_color': '[0.0, 1.0, 0.0, 1.0]',   # Set body_color directly
+            'propeller_color': '[1.0, 1.0, 0.0, 1.0]',  # Set propeller_color directly
+            'odom_topic': '/interceptor/mavros/local_position/odom',     # Set odom_topic directly
+        }.items(),
+    )
+
     # Rviz2
     rviz_node = Node(
         package='rviz2',
@@ -303,6 +321,7 @@ def generate_launch_description():
     ld.add_action(gru_traj_prediction_launch)
     ld.add_action(mpc_traj_gen_launch)
     ld.add_action(rviz_node)
+    ld.add_action(quadcopter_marker_launch)
     
     # ld.add_action(interceptor_offboard_control_node) # WARNING Not used
 

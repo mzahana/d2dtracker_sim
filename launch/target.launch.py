@@ -105,10 +105,29 @@ def generate_launch_description():
         ]
     )
 
+    # Drone marker in RViz
+    quadcopter_marker_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('d2dtracker_sim'),
+                'quadcopter_marker.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'node_ns':ns,
+            'propeller_size': '0.15',                # Set propeller_size directly
+            'arm_length': '0.3',                    # Set arm_length directly
+            'body_color': '[1.0, 0.0, 0.0, 1.0]',   # Set body_color directly
+            'propeller_color': '[1.0, 1.0, 1.0, 1.0]',  # Set propeller_color directly
+            'odom_topic': '/target/mavros/local_position/odom',     # Set odom_topic directly
+        }.items(),
+    )
+
     ld.add_action(gz_launch)
     # ld.add_action(px4_ros_node)
     ld.add_action(map2pose_tf_node)
     ld.add_action(offboard_control_node)
     ld.add_action(mavros_launch)
+    ld.add_action(quadcopter_marker_launch)
 
     return ld
