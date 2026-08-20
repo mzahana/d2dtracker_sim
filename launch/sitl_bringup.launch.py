@@ -18,7 +18,8 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import (DeclareLaunchArgument, ExecuteProcess,
+                            IncludeLaunchDescription, TimerAction)
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -102,6 +103,26 @@ def generate_launch_description():
         condition=IfCondition(with_controller),
     )
 
+    # Raise the PX4->mavros stream rates the controller chain depends on.
+    # Defaults (~30 Hz) add large latency to the combined odometry, which
+    # directly caps the achievable position-loop bandwidth (wn*Td margin).
+    # MAVLink ids: 31 ATTITUDE_QUATERNION, 32 LOCAL_POSITION_NED,
+    # 105 HIGHRES_IMU. Retries until the mavros service is up.
+    set_stream_rates = TimerAction(
+        period=8.0,
+        actions=[ExecuteProcess(
+            cmd=["bash", "-c",
+                 " ; ".join(
+                     f"until ros2 service call /{NS}/mavros/set_message_interval "
+                     f"mavros_msgs/srv/MessageInterval "
+                     f"'{{message_id: {mid}, message_rate: 100.0}}' "
+                     f">/dev/null 2>&1; do sleep 2; done"
+                     for mid in (31, 32, 105))
+                 + " ; echo 'mavros stream rates set to 100 Hz (ids 31/32/105)'"],
+            output="screen",
+        )],
+    )
+
     return LaunchDescription([
         DeclareLaunchArgument("headless", default_value="0"),
         DeclareLaunchArgument("with_controller", default_value="true"),
@@ -109,6 +130,7 @@ def generate_launch_description():
         map2pose_tf_node,
         clock_bridge,
         mavros_launch,
+        set_stream_rates,
         geometric_controller_launch,
         geometric_to_mavros_launch,
     ])
