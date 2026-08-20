@@ -4,13 +4,13 @@
     use_external_yaw: true
     gains:
       pos:
-        x: 10.0
-        y: 10.0
-        z: 15.0
+        x: 2.88
+        y: 2.87
+        z: 2.5
       vel:
-        x: 5.0
-        y: 5.0
-        z: 10.0
+        x: 2.68
+        y: 3.12
+        z: 3.0
       ki:
         x: 0.0
         y: 0.0
