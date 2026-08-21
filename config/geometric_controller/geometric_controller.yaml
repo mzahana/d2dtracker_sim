@@ -4,17 +4,17 @@
     use_external_yaw: true
     gains:
       pos:
-        x: 2.88
-        y: 2.87
-        z: 2.5
+        x: 1.8
+        y: 1.121
+        z: 2.757
       vel:
-        x: 2.68
-        y: 3.12
-        z: 3.0
+        x: 2.85
+        y: 1.219
+        z: 2.619
       ki:
         x: 0.0
         y: 0.0
-        z: 0.0
+        z: 1.0   # kills static z offset from residual thrust-map error (Routh: ki < kx*kv)
       kib:
         x: 0.0
         y: 0.0
@@ -33,6 +33,7 @@
         y: 0.0
         z: 0.0
     attctrl_tau: 0.4
+    yawctrl_tau: 1.103  # from geo_tuner report (yaw T_target 0.35 s)
     max_pos_int: 1.0
     mas_pos_int_b: 1.0
     max_tilt_angle: 0.6853  # rad

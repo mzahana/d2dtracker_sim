@@ -6,3 +6,10 @@
     lin_cof_a: 1.0 # not used
     lin_int_b: 0.0 # not used
     se3_cmd_timeout: 0.25
+    # Online thrust-scale estimator: IMU-based correction of the thrust
+    # map (battery sag, residual max_thrust error). Needs mass.
+    mass: 2.0
+    enable_thrust_estimator: true
+    thrust_est_tau: 15.0
+    thrust_est_min: 0.8
+    thrust_est_max: 1.25
