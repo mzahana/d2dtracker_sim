@@ -17,6 +17,9 @@
   <test_depend>python3-pytest</test_depend>
 
   <exec_depend>ros2launch</exec_depend>
+  <!-- launched by geometric_controller_test.launch.py -->
+  <exec_depend>mav_controllers_ros</exec_depend>
+  <exec_depend>mav_navigator_ros</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>

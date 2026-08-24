@@ -1,0 +1,52 @@
+# Trajectory planner parameters for the 'interceptor' SITL vehicle.
+# The top level key must be the fully namespaced node name.
+#
+# Positions are in the vehicle's local ENU frame, i.e. relative to the PX4 EKF
+# origin, which is the Gazebo spawn point. That is the same convention as the
+# x / y / z arguments of the old static setpoint source.
+/interceptor/trajectory_publisher_node:
+  ros__parameters:
+    trajectory_type: 0        # 0 STATIONARY, 1 CIRCLE, 2 LEMNISCATE, 3 POLYNOMIAL, 4 WAYPOINTS
+    reference_rate: 100.0     # Hz
+    path_rate: 1.0            # Hz
+    path_preview_horizon: 20.0
+
+    origin: [0.0, 0.0, 2.0]
+    axis:   [0.0, 0.0, 1.0]
+    radius: 2.0
+    omega:  0.5               # rad/s -> 1.0 m/s tangential, well inside max_velocity
+
+    yaw_mode: 2               # 0 ZERO, 1 FIXED, 2 VELOCITY_ALIGNED, 3 POINT_AT
+    fixed_yaw: 0.0
+    look_at_point: [0.0, 0.0, 0.0]
+    # A lemniscate's heading turns fastest at the crossing: its peak yaw rate is
+    # about 3.17 * omega, not omega, so the old 1.0 clipped every figure of eight
+    # (and any circle with omega > 1.0). Clipping is not benign -- the yaw command
+    # falls behind the tangent and never catches up on a looping shape. 3.0 matches
+    # the controller's body-rate feedforward clamp and stays under PX4's
+    # MC_YAWRATE_MAX (3.49 rad/s). The planner warns if a shape still out-turns it.
+    max_yaw_rate: 3.0
+
+    # max_velocity is the gate that rejects a trajectory at startup, so raise it
+    # before asking for a faster shape. max_acceleration is the one that actually
+    # matters physically: banking to accelerate sideways costs thrust as
+    # 1/cos(tilt), and at mass 2.6 / max_thrust 34 the hover throttle is already
+    # 0.75, so 5.5 m/s^2 (about 30 deg of bank, 0.87 throttle) is the practical
+    # ceiling. The tilt limit itself would allow 8.0 m/s^2, but that needs 0.97
+    # throttle and leaves nothing for disturbances.
+    max_velocity: 3.0
+    max_acceleration: 5.5
+    max_jerk: 10.0
+
+    num_primitives: 7
+    primitive_duration: 1.0
+
+    # waypoints / waypoint_yaws are deliberately omitted: an empty YAML sequence
+    # has no inferrable element type in Humble. Set them via the launch argument
+    # or the set_trajectory service when trajectory_type is 4.
+    loop: true
+
+    # Setpoints are expressed in the vehicle's local ENU frame, so the RViz path
+    # preview belongs in the odom frame rather than map.
+    frame_id: "interceptor/odom"
+    start_on_launch: false    # require the start service; do not fly on boot
