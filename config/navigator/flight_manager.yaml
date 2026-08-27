@@ -1,0 +1,60 @@
+# Flight state machine parameters for the 'interceptor' SITL vehicle.
+# The top level key must be the fully namespaced node name, matching the
+# convention already used by geometric_controller.yaml in this package.
+/interceptor/flight_manager_node:
+  ros__parameters:
+    control_loop_rate: 100.0        # Hz
+    state_publish_rate: 5.0         # Hz
+
+    # SIMULATION ONLY. Both of these are false by default in mav_navigator_ros.
+    #  - enable_sim_auto_arm lets the node command OFFBOARD and ARM by itself.
+    #  - ready_setpoint_stream streams a hold-at-current-position setpoint while in
+    #    READY. PX4 rejects an OFFBOARD switch unless setpoints are already
+    #    arriving, so without it the auto-arm sequence can never bootstrap.
+    enable_sim_auto_arm: true
+    ready_setpoint_stream: true
+
+    # Disarm as soon as LANDED is reached.
+    # NOTE: the old rationale here (geometric_mavros_node replaying its last SE3
+    # command forever) no longer applies -- that node now holds a level hover
+    # setpoint for cmd_timeout_hold_duration and then goes silent. Still keep this
+    # true: an armed vehicle sitting in OFFBOARD on the ground with no setpoint
+    # stream is what PX4's offboard-loss failsafe is for, and disarming outright is
+    # the cleaner end state.
+    disarm_on_landed: true
+
+    # Let PX4 fly the landing. Its AUTO.LAND arrests horizontal motion before
+    # descending and uses the land detector for touchdown, which is markedly more
+    # stable than the built-in straight-line ramp, especially when landing is
+    # commanded while the vehicle is still tracking a trajectory.
+    use_px4_land: true
+
+    auto_takeoff: false             # overridden by the launch argument of the same name
+    takeoff_altitude: 2.0           # m above latched home
+
+    # Takeoff tuning is a genuine trade-off against PX4 in SITL:
+    #  - PX4 sets COM_DISARM_LAND = 2.0 s. Once armed, if its land detector still
+    #    thinks the vehicle is on the ground after two seconds, it disarms. The
+    #    package default ramp of 0.5 m/s is too gentle to clear the detector, so
+    #    PX4 disarms mid-climb and the state machine correctly aborts to LANDING.
+    #  - A ramp that is too brisk (1.5 m/s) clears the detector easily but
+    #    overshoots the target altitude, so the settle condition takes a long time
+    #    to hold and the handover to MISSION drags.
+    # 1.0 m/s with a slightly looser tolerance satisfies both.
+    takeoff_speed: 1.0              # m/s ramp
+    takeoff_tolerance: 0.25         # m, loosened for the controller's steady-state offset
+    takeoff_settle_time: 1.0        # s
+
+    land_descent_rate: 0.4          # m/s
+    land_tolerance: 0.15            # m
+    land_speed_eps: 0.1             # m/s
+    land_settle_time: 2.0           # s
+
+    # Gazebo occasionally stalls the odometry stream for longer than the 0.3 s
+    # default, which would latch EMERGENCY spuriously. Relaxed for SITL.
+    odom_timeout: 0.5               # s -> EMERGENCY
+    setpoint_timeout: 0.5           # s -> HOLD
+    setpoint_resume_time: 0.2       # s HOLD -> MISSION
+    max_position_error: 10.0        # m -> EMERGENCY
+
+    hold_yaw_from_odom: true
