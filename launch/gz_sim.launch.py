@@ -2,7 +2,7 @@ import os
 import sys
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 
 def generate_launch_description():
 
@@ -23,8 +23,19 @@ def generate_launch_description():
     headless = LaunchConfiguration('headless')
     headless_launch_arg = DeclareLaunchArgument(
         'headless',
-        default_value='0'
+        default_value='0',
+        description="Run Gazebo without its GUI window. Accepts 1/true/yes/on."
     )
+
+    # PX4 spawns the Gazebo GUI itself, from px4-rc.simulator, and decides by
+    # testing whether HEADLESS is NON-EMPTY -- not whether it is truthy. So
+    # forwarding this argument's value directly would make 'headless:=0' run
+    # headless, which is the opposite of what it says. Set the variable only
+    # when the argument is actually on, and leave it unset otherwise.
+    headless_env = PythonExpression([
+        "'HEADLESS=1 ' if '", headless, "'.strip().lower() in "
+        "('1', 'true', 'yes', 'on') else ''"
+    ])
 
     gz_world = LaunchConfiguration('gz_world')
     gz_world_launch_arg = DeclareLaunchArgument(
@@ -74,6 +85,7 @@ def generate_launch_description():
     px4_sim_process = ExecuteProcess(
         cmd=[[
             'cd ',PX4_DIR ,' && ',
+            headless_env,
             'PX4_SYS_AUTOSTART=', px4_autostart_id,
             ' PX4_GZ_MODEL=', gz_model_name,
             ' PX4_UXRCE_DDS_NS=',namespace,
