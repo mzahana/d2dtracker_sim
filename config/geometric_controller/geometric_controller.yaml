@@ -1,16 +1,20 @@
+# Gains of the SIMULATED x500 (PX4 SITL, model x500_d435), identified in SITL
+# with geo_tuner. They are not the real vehicle's gains, which stay on the
+# vehicle. Every iHunter SITL hit take of 2026-10-06 (interception_guidance
+# tools/video, field profile) flew exactly these.
 /interceptor/geometric_controller_node:
   ros__parameters:
     mass: 2.0
     use_external_yaw: true
     gains:
       pos:
-        x: 1.125
-        y: 1.764
-        z: 2.757
+        x: 0.7056
+        y: 1.7689
+        z: 2.7556
       vel:
-        x: 1.781
-        y: 1.95
-        z: 2.619
+        x: 1.1088
+        y: 1.9418
+        z: 2.6228
       ki:
         x: 0.0
         y: 0.0
@@ -33,7 +37,7 @@
         y: 0.0
         z: 0.0
     attctrl_tau: 0.3
-    yawctrl_tau: 1.103  # from geo_tuner report (yaw T_target 0.35 s)
+    yawctrl_tau: 1.12  # from geo_tuner report (yaw T_target 0.35 s)
     max_pos_int: 1.0
     mas_pos_int_b: 1.0
     max_tilt_angle: 0.6853  # rad
