@@ -18,9 +18,16 @@
     # Also used in initializing the upper left (position) part of the P matrix (process covariance) for a track
     r_diag: [0.01, 0.01, 0.01]
 
-    # Standard deviation of the random acceleration variable.
-    # Used in computing Q matrix
-    sigma_a: 500.0
+    # Standard deviation of the random acceleration variable [m/s^2].
+    # Used in computing Q matrix.
+    #
+    # This was 500.0 (~50 g), which made Q enormous: the filter distrusted its
+    # own motion model and the velocity estimate degenerated into raw
+    # measurement differencing (14.6 / 4.0 / 5.8 m/s samples on a steady 8 m/s
+    # target, from PERFECT position input). Position error stayed good, which is
+    # why it went unnoticed -- but all lead guidance depends on velocity.
+    # Swept against ground truth; see docs/PIPELINE_TEST_RESULTS.md.
+    sigma_a: 2.0
 
     # Standard deviation of position
     # Used in computing initial P (state estimate covariance) matrix
